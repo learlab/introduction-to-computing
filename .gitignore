@@ -3,3 +3,7 @@
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+/apps/Introduction-to-Computing/node_modules/
+/node_modules/
+/packages/core/node_modules/
+/packages/tailwind/node_modules/
