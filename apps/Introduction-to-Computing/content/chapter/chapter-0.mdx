@@ -62,23 +62,23 @@ Let’s look at this with a simple example of a conditional statement. We’ll t
 
 Notice in Figure 3.1.1 that both print statements ran. That’s because the conditional statement on line 4 said, “If this expression is true, run the indented code below.” When we change the results of the conditional statement by changing the values of myNum1 and myNum2, check out what happens in Figure 3.1.2.
 
-<Notebook code = {'#Figure 3.1.2\nmyNum1 = 3\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n#Prints this regardless\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.2\nmyNum1 = 3\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n#Prints this regardless\nprint("Execution complete!")'}/>
 
 Here, the indented code on line 6 did not run because the conditional statement was false (because myNum1 is now 3, not 1). In effect, the conditional statement “controls” the indented line below it; that’s why we call it a control structure. However, the important thing to note here is that the non-indented line of code (line 8) _did_ run. It’s outside the indentation, so it executes regardless.  
 This applies to multiple indented lines as well. None of the indented lines in Figure 3.1.3 executed. They are one code block that runs only if the conditional statement is true. This organizational method applies to every code structure we’ll talk about in this chapter: conditionals, loops, functions, and exception handling all group together code through indentation, and all mark their blocks of code with a colon at the end of the preceding line (here, if myNum1 < myNum2:).
 
-<Notebook code = {'#Figure 3.1.3\nmyNum1 = 1\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Prints all these if so\n\tprint("myNum2 is greater than myNum1!")\n\tprint("Yes it is!")\n\tprint("Yes it is!")\n#Prints this regardless\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.3\nmyNum1 = 1\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Prints all these if so\n\tprint("myNum2 is greater than myNum1!")\n\tprint("Yes it is!")\n\tprint("Yes it is!")\n#Prints this regardless\nprint("Execution complete!")'}/>
 
 ### Nested Indentation
 
 Indentation can be nested as well; this is how we create nested conditionals or nested loops. Look at Figure 3.1.4, with three numbers.
 
-<Notebook code = {'#Figure 3.1.4\nmyNum1 = 1\nmyNum2 = 2\nmyNum3 = 3\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n\tif myNum1 < myNum3\n\t\t#Prints this if so\n\t\tprint("myNum3 is also greater than myNum1")\n#Prints this regardless\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.4\nmyNum1 = 1\nmyNum2 = 2\nmyNum3 = 3\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n\tif myNum1 < myNum3:\n\t\t#Prints this if so\n\t\tprint("myNum3 is also greater than myNum1")\n#Prints this regardless\nprint("Execution complete!")'}/>
 
 Line 9 is also indented under line 5, so line 9 is controlled by line 5. Here, the conditional statement in line 5 is True, so the computer reaches line 9. The conditional statement in line 9 is also True, so the computer runs line 11. Notice what happens if the conditional statement in line 5 is False when we switch myNum1 and myNum2 in Figure 3.1.5.  
 myNum1 is still less than myNum3, so if the computer had reached line 9, it would have evaluated to True and printed line 11. However, line 9 is controlled by line 5, and line 5 was False, so the computer skips over the indented block (lines 6 through 11) containing line 9 and just runs the print statement in line 13.
 
-<Notebook code = {'#Figure 3.1.5\nmyNum1 = 2\nmyNum2 = 1\nmyNum3 = 3\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n\tif myNum1 < myNum3\n\t\t#Prints this if so\n\t\tprint("myNum3 is also greater than myNum1")\n#Prints this regardless\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.5\nmyNum1 = 2\nmyNum2 = 1\nmyNum3 = 3\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Prints this if so\n\tprint("myNum2 is greater than myNum1!")\n\tif myNum1 < myNum3:\n\t\t#Prints this if so\n\t\tprint("myNum3 is also greater than myNum1")\n#Prints this regardless\nprint("Execution complete!")'}/>
 
 <Definition text="Indentation">Spaces at the beginning of a line that are used to group together blocks of code. All consecutive lines of code at the same level of indentation are in a single code block.</Definition>
 </div>
@@ -108,7 +108,7 @@ Python’s scoping rules are actually simpler than many languages’. Part of th
 
 Let’s start with a simple example. Figure 3.1.6 is a revised version of the conditional we saw in Figure 3.1.1. The revision makes one change: instead of printing inside the conditional (the if statement), it saves the result to a string called result. It then prints result after the conditional has executed. What happens?
 
-<Notebook code = {'#Figure 3.1.6\nmyNum1 = 1\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Saves this if so\n\tresult = "myNum2 is greater than myNum1!"\n#Prints the results\nprint(result)\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.6\nmyNum1 = 1\nmyNum2 = 2\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Saves this if so\n\tresult = "myNum2 is greater than myNum1!"\n#Prints the results\nprint(result)\nprint("Execution complete!")'}/>
 
 Well, myNum1 is less than myNum2, so the contents of the conditional on line 4 run. The variable result is created, and it is then printed. Python didn’t care that result was created inside the conditional’s code block. This makes it different than many languages; many languages only define variables as existing within that code block.  
 In some ways, this makes programming in Python simpler. If we know that we’re going to create result at some point, we don’t have to worry about creating it at the wrong point. However, it isn’t all good news.
@@ -117,7 +117,7 @@ In some ways, this makes programming in Python simpler. If we know that we’re 
 
 Scope in Python also presents a danger. Take a look at the simple tweak in Figure 3.1.7 to the code from Figure 3.1.6. All we’ve done is change the values of myNum1 and myNum2 so that now the conditional statement on line 4 doesn’t trigger. That means line 6 never runs, which means result is never created.
 
-<Notebook code = {'#Figure 3.1.7\nmyNum1 = 2\nmyNum2 = 1\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2\n\t#Saves this if so\n\tresult = "myNum2 is greater than myNum1!"\n#Prints the results\nprint(result)\nprint("Execution complete!")'}/>
+<Notebook code = {'#Figure 3.1.7\nmyNum1 = 2\nmyNum2 = 1\n#Checks if myNum1 is less than myNum2\nif myNum1 < myNum2:\n\t#Saves this if so\n\tresult = "myNum2 is greater than myNum1!"\n#Prints the results\nprint(result)\nprint("Execution complete!")'}/>
 
 So, what happens when we run this code? Line 8 gives us an error. It hits an error because result was never created because line 6 was never run. This goes back to the idea that a variable’s scope begins when it is created; if the variable is never created, it has no scope.  
 This is the danger of scope in Python. When everything is working correctly, scope in Python is relatively easy to understand because you can think of the control structures as just determining what lines of code run in what order; the result is those lines of code running as if they had been written that way in the first place. However, if a control structure is going to start interfering with whether or not variables get created, then you might run into some issues.  
