@@ -49,11 +49,11 @@ So, these are the main parts of a function.
 
 Once we have that, we can call the function. Calling a function means that when our code reaches the line where we call the function, it jumps into and runs the function’s code. It runs the function’s code until it finds a return statement or the function otherwise ends, and then it returns and picks up where it left off in the regular code. So, in some ways, a function all is like saying, “Go to that other code over there, bring this input with you, and tell me what the output is!” The execution of the code then goes to the function, runs the function’s code, and returns to the main code with the output.
 
-<Notebook code = {'#Figure 3.4.1\nnum1 = 5\nnum2 = 2\ntheSum = addition (num1, num2)\nprint(myResult)\n\ndef addition(addend1, addend2):\n\tmyResult = addend1 + addend2\n\treturn myResult'}/> 
+<Notebook code = {`#Figure 3.4.1\nnum1 = 5\nnum2 = 2\ntheSum = addition (num1, num2)\nprint(myResult)\n\ndef addition(addend1, addend2):\n\tmyResult = addend1 + addend2\n\treturn myResult`}/> 
 
 To call a function, we would write the function’s name, and then give it the input to provide the function’s parameters. We call the input provided in the function call “arguments.” This is nearly identical to variables and values. Variables are names that are assigned values. Parameters are variables specifically for a function, and they are assigned values, called arguments, when the function is called. In our addition example, the “addition” function had two parameters: addend1 and addend2. When we say “Hey, add 5 and 2!”, 5 and 2 are arguments, which are loaded into the parameters. So, when the function has the code addend1 + addend2, these are variables that are loaded with the values 5 and 2.
 
-<Notebook code = {'#Figure 3.4.2\nnum1 = 5\nnum2 = 2\ntheSum = myResult\nprint(myResult)\n\ndef addition(addend1, addend2):\n\tmyResult = addend1 + addend2\n\treturn myResult'}/> 
+<Notebook code = {`#Figure 3.4.2\nnum1 = 5\nnum2 = 2\ntheSum = myResult\nprint(myResult)\n\ndef addition(addend1, addend2):\n\tmyResult = addend1 + addend2\n\treturn myResult`}/> 
 
 Then, the function would return the sum, 7. This would jump the execution back to our main code, where the function call asking the function add() to add 5 and 2 would be replaced by the value 7. These are the parts of the function call: calling the function by name and providing the arguments, and then being replaced by the output.
 
@@ -65,7 +65,7 @@ Finally, our notion of scope still applies to functions. In order to call a func
 </div>
 <div className="content-chunk" data-subsection-id = "An-Analogy-for-Functions-390t">
 ## An Analogy for Functions
-Functions are powerful, but complicated. They fundamentally change the way we think about programming. We’re no longer writing just linear sequences of instructions, with small branches or repetitions. Instead, we’re now structuring entire programs. When writing a function, we need to think about how it might be used by the rest of the program, not just what the needs are for our current line of code. The power of functions means that they’re critical to understand, but they’re also a fundamental change in how we think about structuring programs. As a result, they can be very confusing. So, I think it’s useful to think of functions with an analogy to an office.
+Functions are powerful, but complicated. They fundamentally change the way we think about programming. We’re no longer writing just linear sequences of instructions, with small branches or repetitions. Instead, we’re now structuring entire programs. When writing a function, we need to think about how it might be used by the rest of the program, not just what the needs are for our current line of code. The power of functions means that they’re critical to understand, but they’re also a fundamental change in how we think about structuring programs. As a result, they can be very confusing. So, I think it’s useful to think of functions with an analogy to an office. 
 
 ### Setting Up the Analogy
 
@@ -116,7 +116,7 @@ We’ve spent a very long time now just talking about functions in abstract term
 </div>
 <div className="content-chunk" data-subsection-id = "Simple-Functions-in-Python-391t">
 ## Simple Functions in Python
-Functions are a bit of a chicken-and-egg problem when learning to program. You must have defined a function to be able to call it, but you must be able to call a function to test defining it. So, where do we start? Fortunately, we’ve seen some examples of function calls already: len(), str(), and random.randint() for example. So, we’ve seen what’s involved in a function call. Let’s get started defining functions. First, we’ll define a very general function with no input or return, a function that just performs a task. Then, next lesson we’ll define a function that does return some value. Finally, we’ll define a function that has some parameters and returns some value.
+Functions are a bit of a chicken-and-egg problem when learning to program. You must have defined a function to be able to call it, but you must be able to call a function to test defining it. So, where do we start? Fortunately, we’ve seen some examples of function calls already: len(), str(), and random.randint() for example. So, we’ve seen what’s involved in a function call. Let’s get started defining functions. First, we’ll define a very general function with no input or return, a function that just performs a task. Then, next lesson we’ll define a function that does return some value. Finally, we’ll define a function that has some parameters and returns some value. 
 
 ### The Function Definition
 
@@ -124,7 +124,7 @@ Imagine you’re writing some code that will be used by an online store that doe
 
 To start with, let’s just write a simple function printYen() that will print the character ¥; no input, no output. How do we do that?
 
-<Notebook code = {'#Figure 3.4.3\n#Defines the function "printYen"\ndef printYen():\n\t#Prints "¥", without the new line afterward \n\tprint("¥",end='')\n\n#Calls the function "printYen"\nprintYen()\nprint(5)'}/>
+<Notebook code = {`#Figure 3.4.3\n#Defines the function "printYen"\ndef printYen():\n\t#Prints "¥", without the new line afterward \n\tprint("¥",end='')\n\n#Calls the function "printYen"\nprintYen()\nprint(5)`}/>
 
 Figure 3.4.3 shows the code to print the character ¥. Let’s trace through it. Line 2 is the function header. It starts with the keyword def. The keyword def is a reserved word in Python for creating functions. Then, we have the function name, printYen(). Then, we have an open and close parenthesis. If we were defining parameters, they would go in these parentheses; even if we have no parameters, however, we have to leave these parentheses because they tell Python explicitly that the function needs no input. This is also why we often show function names with parentheses after them when referring to them; for example, “the len() function returns the length of a list.” Then, as with all other control structures, we end with a colon, telling Python to expect an indented line.
 
@@ -142,7 +142,7 @@ Notice that we’ve touched on the idea of scope for methods in this. The scope 
 </div>
 <div className="content-chunk" data-subsection-id = "Functions-with-Returns-and-Parameters-in-Python-392t">
 ## Functions with Returns and Parameters in Python
-So, we’ve now seen the general syntax for defining a function: the keyword def, a name for the function, parentheses, a colon, then the function body. Now let’s add two layers of complexity to this: a return statement and some parameters.
+So, we’ve now seen the general syntax for defining a function: the keyword def, a name for the function, parentheses, a colon, then the function body. Now let’s add two layers of complexity to this: a return statement and some parameters. 
 
 ### A Function with a Return
 
@@ -150,13 +150,13 @@ The function we defined in Figure 3.4.3 is of limited usefulness. Chances are, w
 
 In Figure 3.4.4, we’ve changed line 4. Instead of printing ¥, we return it. What does this mean? It means that wherever we call returnYen(), it gets replaced by the string “¥”. That was our goal, after all: to make it so we didn’t have to keep going and finding the symbol. Now, instead, whenever we need to use it we can just call returnYen().
 
-<Notebook code = {'#Figure 3.4.4\n#Defines the function "returnYen"\ndef returnYen():\n\t#Returns "¥" \n\treturn "¥"\n\n#Prints the output of returnYen()\nprint(returnYen(),end="")\nprint(5)'}/>
+<Notebook code = {`#Figure 3.4.4\n#Defines the function "returnYen"\ndef returnYen():\n\t#Returns "¥" \n\treturn "¥"\n\n#Prints the output of returnYen()\nprint(returnYen(),end="")\nprint(5)`}/>
 
 Let’s trace through how this code executes. Just like before, when the computer runs line 2, it loads the knowledge of the existence of returnYen() into memory. Now it knows that if returnYen() is called, it should come back here and run this function’s body. Then, it skips line 4 because it’s in the body of the function, and the function hasn’t been called yet. Then, it runs line 7. Line 7 asks to print the output of returnYen() (again, without the linebreak). To do this, it has to call returnYen(). So, it does. Execution jumps to line 4, the body of returnYen(). Line 4 says return “¥”. This means that “¥” is sent back to the main program to replace the function call. returnYen() is replaced by the string “¥”. So, this line becomes print("¥", end=""), and so the program just prints ¥. Then, line 8 runs and prints 5.
 
 The outcome is exactly the same, but notice that this design means we could have used returnYen() in other ways. Specifically, we could cut the two print statements down to one, as shown in Figure 3.4.5.
 
-<Notebook code = {'#Figure 3.4.5\n#Defines the function "returnYen"\ndef returnYen():\n\t#Returns "¥" \n\treturn "¥"\n\n#Prints the output of returnYen(), then 5\nprint(returnYen(), 5, sep="")'}/>
+<Notebook code = {`#Figure 3.4.5\n#Defines the function "returnYen"\ndef returnYen():\n\t#Returns "¥" \n\treturn "¥"\n\n#Prints the output of returnYen(), then 5\nprint(returnYen(), 5, sep="")`}/>
 
 Because returnYen() returns “¥” to replace the function call instead of just printing “¥” by itself, we can use it in other lines, too. In Figure 3.4.5, we’re using it to print the same text as before, but imagine using this to generate the price tag to be put into a web site, or the price listing for a pricing database. In those cases, having this kind of access is valuable.
 
@@ -168,13 +168,13 @@ the function, as shown in Figure 3.4.6.
 We’ve updated the function definition and put some new information in the header: amount, in parentheses. amount is a parameter of this function. This is like creating a variable specifically for this function: inside the function body, we can refer to amount as a variable. The value for this variable is the argument passed into the function when it is called. So, when the computer runs line 2 and defines the function, it defines it with the knowledge, “Hey, to call this function, you need  
 to pass in one argument.”
 
-<Notebook code = {'#Figure 3.4.6\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" with the amount \n\treturn "¥" + str(amount)\n\n#Prints the output of returnYenAmount(5)\nprint(returnYenAmount(5))'}/>
+<Notebook code = {`#Figure 3.4.6\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" with the amount \n\treturn "¥" + str(amount)\n\n#Prints the output of returnYenAmount(5)\nprint(returnYenAmount(5))`}/>
 
 As before, execution then skips line 6 because the function returnYenAmount() is being defined, not called. So, execution proceeds to line 7, where it prints returnYenAmount(5). 5 is the argument being passed into the function. So, the value 5 is assigned to the variable amount. This is just as if the first line of the function was amount = 5. Execution jumps to the body of returnYen Amount, which returns "¥" + str(amount). Since amount is 5, this resolves to “¥5”. So, the string “¥5” is returned and replaces returnYenAmount(5) in line 7. This line becomes print("¥5"), so the computer does so. 
 
 So far, all our arguments have been values themselves, but we can (and usually will) use variables themselves as arguments. In this case, the value of the variable becomes the value of the parameter. For example, let’s convert this to a user-facing program that asks the user to input the amount they want added to the currency symbol.
 
-<Notebook code = {'#Figure 3.4.7\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\n\ninputAmount = int(input"Enter the amount: "))\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))'}/>
+<Notebook code = {`#Figure 3.4.7\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\n\ninputAmount = int(input"Enter the amount: "))\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))`}/>
 
 On line 6 of Figure 3.4.7, the user enters a number, when prompted by line 6 and it’s stored in the variable inputAmount. The variable inputAmount is then used as the argument to the function returnYenAmount. This assigns the value of inputAmount to the parameter amount, to be used in the function returnYen-Amount. So, in this case, the user types in 10, which is stored in inputAmount. inputAmount is then passed into returnYenAmount as an argument, meaning the value of inputAmount is assigned to the parameter amount. Now, amount in the function returnYenAmount has the value 10, so when return "¥" + str(amount) is called, it becomes return "¥" + str(10). This resolves to return "¥10", and so the function call is replaced with “¥10”.
 
@@ -185,7 +185,7 @@ If a function is defined with multiple inputs, then it is assumed that the order
 In Figure 3.4.8, we’ve revised the function definition to change the name (now currencyAmount) and have two parameters: currency and amount. The body of the function is a series of conditionals that checks to see if the currency is one of three expected types: JPY for Japanese yen, USD for US dollars, or GBP for British pounds. If currency isn’t one of these, it simply returns amount as a string. Notice here how we have multiple returns, but only one will be reachable at a time based  
 on the value of currency.
 
-<Notebook code = {'#Figure 3.4.8\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\n\ninputAmount = int(input"Enter the amount: "))\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))'}/>
+<Notebook code = {`#Figure 3.4.8\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\n\ninputAmount = int(input"Enter the amount: "))\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))`}/>
 
 When we call the function, we now use two arguments: “GBP” and 5. The order of the arguments matches the order of the parameters, so the parameter currency receives the argument “GBP” and the parameter amount receives the argument 5. The body of the function runs, finding that currency == “GBP” is True, so it returns "£" + str(amount). This resolves to “£5”, so it returns the string “£5”, which replaces the function call. So, line 11 resolves to print("£5"), so it does so.
 
@@ -193,13 +193,13 @@ Before we move on, it is also worth calling attention to the subtle but powerful
 </div>
 <div className="content-chunk" data-subsection-id = "Common-Function-Errors-in-Python-393t">
 ## Common Function Errors in Python
-We’ve covered how functions are defined and called; now let’s discuss some of the function-specific things that can go wrong. All of the errors we’ve described in the past can apply to functions, too. For example, if we have a parameter to a function (like amount in currencyAmount()) that is treated as an integer inside the function but we pass in a string, then we get the same error as if we had just tried to do math on a string in a regular program as well. The function doesn’t change that. However, there are a couple of function-specific errors we can anticipate.
+We’ve covered how functions are defined and called; now let’s discuss some of the function-specific things that can go wrong. All of the errors we’ve described in the past can apply to functions, too. For example, if we have a parameter to a function (like amount in currencyAmount()) that is treated as an integer inside the function but we pass in a string, then we get the same error as if we had just tried to do math on a string in a regular program as well. The function doesn’t change that. However, there are a couple of function-specific errors we can anticipate. 
 
 ### Parameter Mismatch
 
 When we define a function, part of that definition is the declaration of how many arguments should be passed in. This comes in the form of the parameter list. Our currencyAmount() function above had two parameters: currency and amount. To call currencyAmount(), the program had to supply arguments for both parameters (that is, values for both variables). What happens if we don’t?
 
-<Notebook code = {'#Figure 3.4.9\n#Defines function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD"\n\t\treturn "$" + str(amount)\n\telif currency == "GBP"\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\n#Prints currencyAmount(5)'s output\nprint(currencyAmount(5))'}/>
+<Notebook code = {`#Figure 3.4.9\n#Defines function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD"\n\t\treturn "$" + str(amount)\n\telif currency == "GBP"\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\n#Prints currencyAmount(5)'s output\nprint(currencyAmount(5))`}/>
 
 Figure 3.4.9 shows this error in action. The error is TypeError, which we’ve seen before. The feedback from the error gives us plenty of information: “missing 1 required positional argument: ‘amount.’” This basically says, “no value was given for amount.” The only reason amount specifically didn’t receive a value is because, as we described before, the arguments are assumed to go in the same order as the parameters. The first argument is 5, so it’s assigned to the first parameter, currency. This is wrong, of course, but that’s the way the computer interprets it. It then looks for an argument for amount, but doesn’t find one. So, it throws up that error.
 
@@ -207,7 +207,7 @@ Figure 3.4.9 shows this error in action. The error is TypeError, which we’ve s
 
 We’ve covered the scope of functions themselves; basically, a function must be defined before it is called in some code, the same way a variable had to be created before it was used. However, what about the variables we use inside functions? What are their scopes?
 
-<Notebook code = {'#Figure 3.4.10\n#Defines the function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\tresultString = "¥" + str(amount)\n\telif currency == "USD"\n\t\tresultString = "$" + str(amount)\n\telif currency == "GBP"\n\t\tresultString = "£" + str(amount)\n\telse:\n\t\tresultString = str(amount)\n\t\t\n#Runs currencyAmount(5)\ncurrencyAmount("GBP",5)\nprint(resultString)'}/>
+<Notebook code = {`#Figure 3.4.10\n#Defines the function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\tresultString = "¥" + str(amount)\n\telif currency == "USD"\n\t\tresultString = "$" + str(amount)\n\telif currency == "GBP"\n\t\tresultString = "£" + str(amount)\n\telse:\n\t\tresultString = str(amount)\n\t\t\n#Runs currencyAmount(5)\ncurrencyAmount("GBP",5)\nprint(resultString)`}/>
 
 The code in Figure 3.4.10 tests that out. Instead of returning something from currencyAmount, here we just set the result equal to resultString. If the scope of a variable created inside a function extended to after the function has run, then this code should work: by the time line 12 runs, line 8 will have run, and result-String will have been created. Instead, though, we receive an error saying that resultString is not defined. Variables defined inside functions only exist inside those functions. The same goes for parameters: we can’t use currency or amount outside of currencyAmount() because these are variables specifically for that function.
 
@@ -215,7 +215,7 @@ This is the first major exception we’ve encountered to our general rule that t
 </div>
 <div className="content-chunk" data-subsection-id = "Advanced-Python-Functions-394t">
 ## Advanced Python Functions
-Different languages extend the general idea of functions in different ways. In Python, there are a couple of advanced details regarding functions that are worth covering. In fact, Python functions can get very complex, but we’re most interested in keyword parameters. Keyword parameters are not terribly common in what you’ll write, but they do add a lot of power to your toolbox.
+Different languages extend the general idea of functions in different ways. In Python, there are a couple of advanced details regarding functions that are worth covering. In fact, Python functions can get very complex, but we’re most interested in keyword parameters. Keyword parameters are not terribly common in what you’ll write, but they do add a lot of power to your toolbox. 
 
 ### Using Keyword Parameters
 
@@ -225,17 +225,17 @@ For required parameters, what we’ve said so far is true with regard to assumin
 
 The print() function is a good example of this. The print() function takes as input one or more strings to print in order. We haven’t seen it printing multiple strings before, but we can see it now in Figure 3.4.11.
 
-<Notebook code = {'#Figure 3.4.11\nprint("A", "B", "C")\nprint("D", "E", "F")'}/>
+<Notebook code = {`#Figure 3.4.11\nprint("A", "B", "C")\nprint("D", "E", "F")`}/>
 
 When we give print() multiple strings, it prints them one at a time in the order they’re given, separated by spaces. Each print() function call automatically ends the line, which is why D E F appears on a different line from A B C; print() puts a space between each character and a new line at the end of each line. Technically, new line is just a character that isn’t shown, but instead tells the computer to print the next text on a new line.
 
 The print() function assumes we want spaces between the individual strings, and a new line at the end of each print() call. What if we don’t want that? What if we want no spaces between strings, and no new line at the end of each line? Then, we use keyword parameters, as shown in Figure 3.4.12.
 
-<Notebook code = {'#Figure 3.4.12\nprint("A", "B", "C", sep= "", end= "")\nprint("D", "E", "F", sep= "", end= "")'}/>
+<Notebook code = {`#Figure 3.4.12\nprint("A", "B", "C", sep= "", end= "")\nprint("D", "E", "F", sep= "", end= "")`}/>
 
 A keyword parameter is a parameter that has an assumed value, but that the function call can override. Overriding it looks like declaring a variable: we take the name of the parameter, and assign it to a different value. Here, the parameter sep (for “separator”) is used to define what character will be used between each string in the print() call. It is assumed to be a space, but if we include the argument sep = "", it is assigned an empty value. Then, the print statement puts nothing in between the characters. Similarly, the parameter end holds what character to put at the end of the line. By passing the argument end = "", we override that with a blank character, forcing everything onto one line. If this is confusing, let’s try to override sep and end with visible characters in Figure 3.4.13. This looks messier, but it might be easier to understand. Including the argument sep = "#" in the first line replaces those spaces from the original output with # symbols. Including the argument end = "?" replaces the new line character with a question mark. We can also see here how using different symbols in line 2 causes different symbols to appear among the D, E, and F.
 
-<Notebook code = {'#Figure 3.4.13\nprint("A", "B", "C", sep= "#",end= "?")\nprint("D", "E", "F", sep= "%", end= "!")'}/>
+<Notebook code = {`#Figure 3.4.13\nprint("A", "B", "C", sep= "#",end= "?")\nprint("D", "E", "F", sep= "%", end= "!")`}/>
 
 These are keyword parameters. We don’t assume the program will define them because oftentimes they won’t; but we want to give the program the ability to define them if need be. If we simply list them as normal parameters, they become required, and throw up that TypeError from Figure 3.4.9 if the program doesn’t specify them. We don’t want the programmer to have to specify what separator to use every time they use the print() function, though, since most of the time it will be the same. So, we use keyword parameters, which give the program a way to specify alternate values when needed, but a way to ignore them in favor of default values when alternate values are not needed.
 
@@ -245,7 +245,7 @@ So, how do we create keyword parameters? In our function declaration, we include
 
 In Figure 3.4.14, we’ve revised our function declaration to say currency ="USD" in the parameter list instead of just currency. We switched the order because keyword parameters must come after regular (also called positional) parameters. We assigned currency a value of “USD”, which basically says, “Assume currency is ‘USD’ unless the function call says otherwise.” Beyond that, the function definition is the same.
 
-<Notebook code = {'#Figure 3.4.14\n#Defines function "currencyAmount"\ndef currencyAmount(amount, currency= "USD"):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD"\n\t\treturn "$" + str(amount)\n\telif currency == "GBP"\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\t\t\n#Prints the output of currencyAmount(5)\nprint(currencyAmount(5))\n#Prints the output of currencyAmount(5,currency= "GBP")\nprint(currencyAmount(5,currency= "GBP"))'}/>
+<Notebook code = {`#Figure 3.4.14\n#Defines function "currencyAmount"\ndef currencyAmount(amount, currency= "USD"):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD"\n\t\treturn "$" + str(amount)\n\telif currency == "GBP"\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\t\t\n#Prints the output of currencyAmount(5)\nprint(currencyAmount(5))\n#Prints the output of currencyAmount(5,currency= "GBP")\nprint(currencyAmount(5,currency= "GBP"))`}/>
 
 Now, we call currencyAmount in two different ways. On line 13, we just give it the argument 5. Based on the position, the computer assumes 5 is the amount. No argument is given for currency, so it maintains the assumed value of ‘USD’ and runs accordingly. On line 15 we call currencyAmount, we specifically override the parameter currency with the value “GBP”, and as a result, the code uses “GBP” as the value for that variable.
 
@@ -253,7 +253,7 @@ Now, we call currencyAmount in two different ways. On line 13, we just give it t
 </div>
 <div className="content-chunk" data-subsection-id = "Functions-and-Turtles-395t">
 ## Functions and Turtles
-Functions give us a powerful new way to add new functionality to our turtle project while keeping it somewhat organized. To close out our lesson on functions, let’s do two things: first, let’s take our prior work on a shape command and spin it off into a function, and second, let’s create a new function for something even more interesting.
+Functions give us a powerful new way to add new functionality to our turtle project while keeping it somewhat organized. To close out our lesson on functions, let’s do two things: first, let’s take our prior work on a shape command and spin it off into a function, and second, let’s create a new function for something even more interesting. 
 
 ### The Shape Function
 
