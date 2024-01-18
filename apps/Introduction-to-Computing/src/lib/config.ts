@@ -1,9 +1,9 @@
 export const getSiteConfig = async () => {
 	return {
-		title: "Think Python, 2nd",
+		title: "Introduction to Computing",
 		latex: false,
 		description:
-			"This textbook is adopted from https://greenteapress.com/wp/think-python-2e/.",
+			"iTELL deployment of David Joyner's Introduction to Computing, 1st Edition.",
 		footer:
 			"A project by the Language and Educational Analytics Research (Lear)Lab",
 		favicon: "/images/avatars/favicon.png",
