@@ -8,6 +8,8 @@ type Props = {
 };
 
 export const PageStatusModal = ({ chapter, user }: Props) => {
+	return <PageLockedModal userChapter={user.chapter} />;
+
 	if (chapter > 1 && !user) {
 		return <PageUnauthorizedModal />;
 	}
