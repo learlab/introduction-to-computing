@@ -169,7 +169,7 @@ As before, execution then skips line 6 because the function returnYenAmount() is
 
 So far, all our arguments have been values themselves, but we can (and usually will) use variables themselves as arguments. In this case, the value of the variable becomes the value of the parameter. For example, let’s convert this to a user-facing program that asks the user to input the amount they want added to the currency symbol.
 
-<Notebook code = {`#Figure 3.4.7\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\n\ninputAmount = int(input("Enter the amount: "))\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))`}/>
+<Notebook code = {`#Figure 3.4.7\n#Defines the function "returnYenAmount"\ndef returnYenAmount(amount):\n\t#Returns "¥" \n\treturn "¥" + str(amount)\ninputAmount = 5 \nprint("Enter the amount:",inputAmount)\n#Prints the output of returnYenAmount(inputAmount)\nprint(returnYenAmount(inputAmount))`}/>
 
 On line 6 of Figure 3.4.7, the user enters a number, when prompted by line 6 and it’s stored in the variable inputAmount. The variable inputAmount is then used as the argument to the function returnYenAmount. This assigns the value of inputAmount to the parameter amount, to be used in the function returnYen-Amount. So, in this case, the user types in 10, which is stored in inputAmount. inputAmount is then passed into returnYenAmount as an argument, meaning the value of inputAmount is assigned to the parameter amount. Now, amount in the function returnYenAmount has the value 10, so when return "¥" + str(amount) is called, it becomes return "¥" + str(10). This resolves to return "¥10", and so the function call is replaced with “¥10”.
 
