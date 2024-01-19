@@ -73,7 +73,7 @@ Now that we’ve covered the basic principles of conditional statements, let’s
 
 Let’s start with the simple example: if it’s raining, then the user should wear a raincoat and rainboots. This reasoning is shown in Figure 3.2.2.
 
-<Notebook code = {`#Figure 3.2.2\n#Creates todaysWeather and sets it\n#equal to "raining"\ntodaysWeather = "raining"\n\n#Checks if todaysWeather equal to "raining"\nif todaysWeather = "raining":\n\t#Prints "raincoat" if so\n\tprint("raincoat")\n\t#Prints "rainboots" if so\n\tprint("rainboots")\n#Prints "Done!" when complete \nprint("Done!")`}/>
+<Notebook code = {`#Figure 3.2.2\n#Creates todaysWeather and sets it\n#equal to "raining"\ntodaysWeather = "raining"\n\n#Checks if todaysWeather equal to "raining"\nif todaysWeather == "raining":\n\t#Prints "raincoat" if so\n\tprint("raincoat")\n\t#Prints "rainboots" if so\n\tprint("rainboots")\n#Prints "Done!" when complete \nprint("Done!")`}/>
 
 In line 3, we’re creating the variable to store todaysWeather; if we were actually developing a program to do this, we would probably load this value from the Internet, but for testing we would give it a value manually to test the rest of our code. Then on line 6, we use the relational equality operator, ==, to check if today- sWeather is equal to “raining.” Here, it is, so “raincoat” and “rainboots” are printed from lines 8 and 10. What if todaysWeather didn’t equal “raining?”
 
