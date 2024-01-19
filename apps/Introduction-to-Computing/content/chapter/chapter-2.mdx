@@ -122,7 +122,7 @@ Any of our for loops could have been rewritten as while loops. However, while lo
 
 Let’s take a simple example of this. You might notice what we’re about to write is similar to something we wrote previously with for loops. That’s exactly right: any for loop can be written as a while loop. Figure 3.3.8 shows some code to count up to a number with a while loop.
 
-<Notebook code = {`#Figure 3.3.8\ni = 1\n#Repeat while i is less than 11 \nwhile i < 11:\n    print(i)\n    i += 1`}/>
+<Notebook code = {`#Figure 3.3.8\ni = 1\n#Repeat while i is less than 11 \nwhile i < 11:\n\tprint(i)\n\ti += 1`}/>
 
 On line 1, we create i and set it equal to 1. We need to create it in advance so we can check it when we get to the loop. Then we write our while loop. We start with the word while, which is a reserved word like if and for. We then write the logical expression that will control the loop. Notice this is just like an if statement: in many ways, a while loop is an if statement that repeats until the condition is False instead of just running once if it was True. As before, we end with a colon to mark off the code block the loop will control.  
 Inside the while loop, we print the current value of i, and then add 1 to it. So, let’s trace this code. When the program reaches the while loop the first time, i is 1, which is less than 11. So, it prints i (1), then adds 1 adds 1 to i to make it 2. Then, it jumps back to the top and checks the logical expression again: is 2 less than 11? Yes, it still is. So, it runs the body again: it prints i, now 2, and then adds 1 to i, making it 3. It repeats this until i is 11. At that point, the logical expression is no longer true, and so it stops running. Notice that we increment i after we print it. If we incremented it first, the loop would run the same number of times, but it would print 2 to 11 instead of 1 to 10.  
@@ -154,10 +154,10 @@ You might notice in the previous example that something risky could happen. What
   
 These are very easy to create. This simple loop in Figure 3.3.10, for example, will never end. We create i, our loop control variable, and assign it the value 1. Then, we create a while loop that repeats as long as i is greater than 0. Every time it repeats, we just print i. What will the result be here? Simple: it will just print 1 over and over and over again, millions of times per second if our computer allows it. If the loop repeats so long as i is greater than 0 and the value of i never changes, then the loop will never terminate.
 
-#Figure 3.3.10  
-i = 1  
-while i > 0:  
-    print(i)
+<Notebook code = {`#Figure 3.3.10`}/>  
+<Notebook code = {`i = 1`}/>  
+<Notebook code = {`while i > 0:`}/>  
+<Notebook code = {`    print(i)`}/>
 
 Infinite loops are errors, but they’re interesting errors in that they generally don’t give us any actual error messages. When we use a variable outside its scope or divide by zero, the computer tells us, “Hey, you can’t do that!” But when we have an infinite loop in our code, it just runs and runs and runs. If your code is complex, it can be tough to tell if it’s just running normally and taking a while, or encountering an infinite loop. print() statements can help with this: if you use print debugging and see the same thing printed over and over again, it often means you’re looping over the same thing over and over. I can say, personally, I’ve done that many times, usually just by forgetting to add that last line that increments some loop control variable.
 </div>
