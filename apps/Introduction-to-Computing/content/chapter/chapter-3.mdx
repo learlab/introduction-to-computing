@@ -11,9 +11,7 @@ quiz: false
 \- Recognize Python function errors,including parameter mismatch and scope errors;  
 \- Equip their user-facing turtle script with functions to build more complex programs.</Info>
 
-A **function** is like a little program on its own. Like full programs, a function takes some input and produces some output. In that sense, functions are very simple. We  
-could slap a function declaration (the line of code that tells the computer that the code that follows is a function) on top of any code we’ve written so far and call it a  
-function. In fact, some languages (like Java) can’t do anything outside a function.
+A **function** is like a little program on its own. Like full programs, a function takes some input and produces some output. In that sense, functions are very simple. We could slap a function declaration (the line of code that tells the computer that the code that follows is a function) on top of any code we’ve written so far and call it a function. In fact, some languages (like Java) can’t do anything outside a function.
 
 ### Power of Functions
 
@@ -181,7 +179,7 @@ If a function is defined with multiple inputs, then it is assumed that the order
 
 In Figure 3.4.8, we’ve revised the function definition to change the name (now currencyAmount) and have two parameters: currency and amount. The body of the function is a series of conditionals that checks to see if the currency is one of three expected types: JPY for Japanese yen, USD for US dollars, or GBP for British pounds. If currency isn’t one of these, it simply returns amount as a string. Notice here how we have multiple returns, but only one will be reachable at a time based on the value of currency.
 
-<Notebook code = {`#Figure 3.4.8\n#Defines the function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD"\n\t\treturn "$" + str(amount)\n\telif currency == "GBP"\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\n#Prints the output of currencyAmount("GBP", 5)\nprint(currencyAmount("GBP",5))`}/>
+<Notebook code = {`#Figure 3.4.8\n#Defines the function "currencyAmount"\ndef currencyAmount(currency, amount):\n\tif currency == "JPY":\n\t\treturn "¥" + str(amount)\n\telif currency == "USD":\n\t\treturn "$" + str(amount)\n\telif currency == "GBP":\n\t\treturn "£" + str(amount)\n\telse:\n\t\treturn str(amount)\n\n#Prints the output of currencyAmount("GBP", 5)\nprint(currencyAmount("GBP",5))`}/>
 
 When we call the function, we now use two arguments: “GBP” and 5. The order of the arguments matches the order of the parameters, so the parameter currency receives the argument “GBP” and the parameter amount receives the argument 5. The body of the function runs, finding that currency == “GBP” is True, so it returns "£" + str(amount). This resolves to “£5”, so it returns the string “£5”, which replaces the function call. So, line 11 resolves to print("£5"), so it does so.
 
