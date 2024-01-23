@@ -2,7 +2,7 @@ import { cn } from "@itell/core/utils";
 import { BookmarkIcon } from "lucide-react";
 
 type Heading = {
-	level: "one" | "two" | "three";
+	level: "one" | "two" | "three" | "four" | "other";
 	text: string | undefined;
 	slug: string | undefined;
 };
@@ -13,35 +13,32 @@ type TocSidebarProps = {
 export const PageToc = ({ headings }: TocSidebarProps) => {
 	return (
 		<div>
-			<p className="font-medium text-sm flex items-center">
+			<p className="font-medium flex items-center">
+				<BookmarkIcon className="mr-2 size-4" />
 				<span>ON THIS PAGE</span>
-				<BookmarkIcon className="ml-2 w-4 h-4" />
 			</p>
-			<ul className="mt-2 space-y-1">
+
+			<ol className="max-h-[60vh] overflow-y-scroll list-disc mt-2 space-y-2 pl-4">
 				{headings
-					.filter(
-						(heading) => !heading.text?.startsWith("Please write your summary"),
-					)
+					.filter((heading) => heading.level !== "other")
 					.map((heading) => (
-						<li
-							key={heading.slug}
-							className="font-light tracking-tighter line-clamp-2"
-						>
+						<li key={heading.slug}>
 							<a
 								data-level={heading.level}
 								href={`#${heading.slug}`}
 								className={cn("hover:underline inline-flex ", {
-									"text-base": heading.level === "one",
-									"text-sm": heading.level === "two",
-									"text-muted-foreground text-xs pl-2":
-										heading.level === "three",
+									"text-lg": heading.level === "two",
+									"text-base pl-1": heading.level === "three",
+									"text-sm pl-2": heading.level === "four",
+									"text-muted-foreground text-sm pl-4":
+										heading.level === "other",
 								})}
 							>
 								{heading.text}
 							</a>
 						</li>
 					))}
-			</ul>
+			</ol>
 		</div>
 	);
 };
