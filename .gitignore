@@ -7,3 +7,12 @@
 /node_modules/
 /packages/core/node_modules/
 /packages/tailwind/node_modules/
+/apps/Introduction-to-Computing/.turbo/
+/apps/Introduction-to-Computing/.contentlayer/
+/apps/Introduction-to-Computing/.next/
+/packages/core/.turbo/
+/packages/tailwind/.turbo/
+/packages/ui/.turbo/
+/packages/core/dist/
+/packages/tailwind/dist/
+/.turbo/
