@@ -8,17 +8,17 @@ type Props = {
 };
 
 export const PageStatusModal = ({ chapter, user }: Props) => {
-	return null;
+	//return null;
 
-	// if (chapter > 1 && !user) {
-	// 	return <PageUnauthorizedModal />;
-	// }
-	//
-	// if (user) {
-	// 	if (user.chapter < chapter) {
-	// 		return <PageLockedModal userChapter={user.chapter} />;
-	// 	}
-	// }
-	//
-	// return null;
+	if (chapter > 1 && !user) {
+		return <PageUnauthorizedModal />;
+	}
+
+	if (user) {
+		if (user.chapter < chapter) {
+			return <PageLockedModal userChapter={user.chapter} />;
+		}
+	}
+
+	return null;
 };
