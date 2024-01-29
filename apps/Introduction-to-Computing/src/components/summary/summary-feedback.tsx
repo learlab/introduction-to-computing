@@ -1,21 +1,43 @@
-import type { SummaryFeedbackType } from "@/lib/summary";
 import { Info, Warning } from "@itell/ui/server";
 import { Accordion, AccordionItem } from "../client-components";
+import { SummaryFeedbackType } from "@itell/core/summary";
+import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
+import { getPageData, makePageHref } from "@/lib/utils";
 
 type Props = {
+	canProceed: boolean;
+	pageSlug: string;
 	feedback: SummaryFeedbackType;
 };
 
-export const SummaryFeedback = ({ feedback }: Props) => {
+export const SummaryFeedback = ({ feedback, canProceed, pageSlug }: Props) => {
+	const pageData = getPageData(pageSlug);
+	if (!pageData) {
+		return null;
+	}
+
 	const FeedbackBody = (
 		<div className="font-light leading-relaxed space-y-2">
-			<p>{feedback.prompt}</p>
+			<header className="flex justify-between">
+				<p>{feedback.prompt}</p>
+				{canProceed && pageData.nextPageSlug && (
+					<Link
+						href={makePageHref(pageData.nextPageSlug)}
+						className="inline-flex gap-1 items-center hover:underline"
+					>
+						<ChevronRightIcon className="size-4" /> Move on
+					</Link>
+				)}
+			</header>
 			{feedback.suggestedKeyphrases && (
 				<div>
 					Try to include the following keywords:
 					<ul className="list-disc">
 						{feedback.suggestedKeyphrases.map((keyphrase) => (
-							<li className="text-accent-foreground">{keyphrase}</li>
+							<li className="text-accent-foreground" key={keyphrase}>
+								{keyphrase}
+							</li>
 						))}
 					</ul>
 				</div>

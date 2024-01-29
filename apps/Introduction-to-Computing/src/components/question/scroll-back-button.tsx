@@ -3,21 +3,20 @@
 import { cn } from "@itell/core/utils";
 import { buttonVariants } from "@itell/ui/server";
 import { useQA } from "../context/qa-context";
+import { getChunkElement } from "@/lib/utils";
 
 export const ScrollBackButton = () => {
 	const { currentChunk, chunks } = useQA();
 
 	const scrollToCurrentChunk = () => {
-		if (chunks) {
-			const element = chunks[currentChunk];
-			if (element) {
-				element.scrollIntoView({ behavior: "smooth" });
-			}
+		const element = getChunkElement(currentChunk);
+		if (element) {
+			element.scrollIntoView({ behavior: "smooth" });
 		}
 	};
 
 	// disappear is user unlocks all chunks
-	if (chunks && currentChunk >= chunks.length - 1) {
+	if (chunks[chunks.length - 1] === currentChunk) {
 		return null;
 	}
 
@@ -28,8 +27,8 @@ export const ScrollBackButton = () => {
 					buttonVariants({ variant: "secondary" }),
 					"bg-emerald-400  hover:bg-emerald-200 text-white m-2 p-2",
 				)}
-				type="button"
 				onClick={scrollToCurrentChunk}
+				type="button"
 			>
 				Click Here to Scroll Back Up to Your Current Subsection
 			</button>

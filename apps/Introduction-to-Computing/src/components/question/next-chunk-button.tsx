@@ -1,13 +1,13 @@
 "use client";
 
 import { useQA } from "../context/qa-context";
-import { useSession } from "next-auth/react";
 import { createEvent } from "@/lib/server-actions";
 import { Button } from "../client-components";
-import { useCurrentChunkLocal } from "@/lib/hooks/utils";
 
 interface Props extends React.ComponentPropsWithRef<typeof Button> {
 	onClick?: () => void;
+	chunkSlug: string;
+	pageSlug: string;
 	clickEventType: string;
 	standalone?: boolean;
 	children: React.ReactNode;
@@ -18,44 +18,35 @@ export const NextChunkButton = ({
 	clickEventType,
 	children,
 	standalone,
+	chunkSlug,
+	pageSlug,
 	...rest
 }: Props) => {
-	const { currentChunk, setCurrentChunk, chunks } = useQA();
-	const { data: session } = useSession();
-	const [_, setCurrentChunkLocal] = useCurrentChunkLocal();
-	// submit event
-	const submitEvent = async () => {
-		if (session) {
-			createEvent({
-				eventType: clickEventType,
-				page: location.href,
-				user: {
-					connect: {
-						id: session.user.id,
-					},
-				},
-				data: {
-					currentChunk: currentChunk,
-				},
-			});
-		}
-	};
+	const { chunks, goToNextChunk, setIsPageFinished } = useQA();
+	const isLastQuestion = chunkSlug === chunks[chunks.length - 1];
 
 	const onSubmit = async () => {
-		if (chunks && currentChunk < chunks.length - 1) {
-			const nextChunk = currentChunk + 1;
-			setCurrentChunkLocal(nextChunk);
-			setCurrentChunk(nextChunk);
+		goToNextChunk();
+
+		if (isLastQuestion) {
+			setIsPageFinished(true);
 		}
+
 		if (onClick) {
 			onClick();
 		}
-		await submitEvent();
+		await createEvent({
+			eventType: clickEventType,
+			page: location.href,
+			data: {
+				currentChunk: chunkSlug,
+			},
+		});
 	};
 
 	return (
 		<div className="flex justify-center items-center p-4 gap-2">
-			<Button variant="secondary" onClick={onSubmit} {...rest}>
+			<Button variant="secondary" type="button" onClick={onSubmit} {...rest}>
 				{children}
 			</Button>
 			{standalone && (

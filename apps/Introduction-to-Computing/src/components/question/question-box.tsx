@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@itell/core/utils";
+import { Confetti } from "@/components/ui/confetti";
 import {
 	Card,
 	CardContent,
@@ -18,26 +19,25 @@ import {
 	HoverCard,
 	HoverCardContent,
 	HoverCardTrigger,
+	TextArea,
 } from "../client-components";
 import { toast } from "sonner";
 // import shake effect
 import "@/styles/shakescreen.css";
 import { useSession } from "next-auth/react";
 import { createConstructedResponse } from "@/lib/server-actions";
-import { TextArea } from "@/components/client-components";
 import { NextChunkButton } from "./next-chunk-button";
 import { isProduction } from "@/lib/constants";
 import { useFormState, useFormStatus } from "react-dom";
-import { Confetti } from "../ui/confetti";
+import { useQA } from "../context/qa-context";
 
 type QuestionScore = 0 | 1 | 2;
 
 type Props = {
-	isPageMasked: boolean;
 	question: string;
 	answer: string;
-	chapter: number;
-	subsection: number;
+	chunkSlug: string;
+	pageSlug: string;
 	isFeedbackEnabled: boolean;
 };
 
@@ -47,6 +47,7 @@ enum AnswerStatus {
 	BOTH_CORRECT = 1,
 	SEMI_CORRECT = 2,
 	BOTH_INCORRECT = 3,
+	PASSED = 4, // fallback when api call fails
 }
 
 // state for border color
@@ -75,16 +76,17 @@ const SubmitButton = ({ answerStatus }: { answerStatus: AnswerStatus }) => {
 
 export const QuestionBox = ({
 	question,
-	chapter,
-	subsection,
 	answer,
-	isPageMasked,
+	chunkSlug,
+	pageSlug,
 	isFeedbackEnabled,
 }: Props) => {
 	const { data: session } = useSession();
+	const { chunks, isPageFinished } = useQA();
 	const [isShaking, setIsShaking] = useState(false);
-	const [isNextButtonDisplayed, setIsNextButtonDisplayed] =
-		useState(isPageMasked);
+	const [isNextButtonDisplayed, setIsNextButtonDisplayed] = useState(
+		!isPageFinished,
+	);
 
 	// Function to trigger the shake animation
 	const shakeModal = () => {
@@ -104,92 +106,66 @@ export const QuestionBox = ({
 		if (input.trim() === "") {
 			return {
 				...prevState,
-				error: "Please enter an non-empty answer",
+				error: "Answer cannot be empty",
 			};
 		}
 
-		if (!session) {
-			return {
-				...prevState,
-				error: "You must be logged in to submit an answer",
-			};
-		}
+		try {
+			const response = await getQAScore({
+				input,
+				chunk_slug: chunkSlug,
+				page_slug: pageSlug,
+			});
 
-		if (!isFeedbackEnabled) {
+			if (!response.success) {
+				// API response is not in correct shape
+				console.error("API Response error", response);
+				return {
+					...prevState,
+					answerStatus: AnswerStatus.PASSED,
+					error: "Answer evaluation failed, please try again later",
+				};
+			}
+
+			const score = response.data.score as QuestionScore;
 			if (isProduction) {
+				// when there is no session, question won't be displayed
 				await createConstructedResponse({
 					response: input,
-					chapter: chapter,
-					subsection: subsection,
-					score: -1,
-					user: {
-						connect: {
-							id: session.user.id,
-						},
-					},
+					pageSlug,
+					score,
 				});
 			}
 
-			return {
-				answerStatus: AnswerStatus.BOTH_CORRECT,
-				error: null,
-			};
-		}
+			if (score === 2) {
+				return {
+					error: null,
+					answerStatus: AnswerStatus.BOTH_CORRECT,
+				};
+			}
 
-		const response = await getQAScore({
-			input,
-			chapter: String(chapter),
-			subsection: String(subsection),
-		});
+			if (score === 1) {
+				return {
+					error: null,
+					answerStatus: AnswerStatus.SEMI_CORRECT,
+				};
+			}
 
-		if (!response.success) {
-			// API response is not in correct shape
-			console.error("API Response error", response);
+			if (score === 0) {
+				return {
+					error: null,
+					answerStatus: AnswerStatus.BOTH_INCORRECT,
+				};
+			}
+
+			// for typing purposes, this should never run
+			return prevState;
+		} catch {
 			return {
-				...prevState,
 				error: "Answer evaluation failed, please try again later",
+				answerStatus: prevState.answerStatus,
 			};
 		}
-
-		const score = response.data.score as QuestionScore;
-		if (isProduction) {
-			// when there is no session, question won't be displayed
-			await createConstructedResponse({
-				response: input,
-				chapter: chapter,
-				subsection: subsection,
-				score,
-				user: {
-					connect: {
-						id: session.user.id,
-					},
-				},
-			});
-		}
-
-		if (score === 2) {
-			return {
-				error: null,
-				answerStatus: AnswerStatus.BOTH_CORRECT,
-			};
-		}
-
-		if (score === 1) {
-			return {
-				error: null,
-				answerStatus: AnswerStatus.SEMI_CORRECT,
-			};
-		}
-
-		if (score === 0) {
-			return {
-				error: null,
-				answerStatus: AnswerStatus.BOTH_INCORRECT,
-			};
-		}
-
-		// for typing purposes, this should never run
-		return prevState;
 	};
 
 	const initialFormState: FormState = {
@@ -223,11 +199,80 @@ export const QuestionBox = ({
 		}
 	}, [formState]);
 
+	const isLastQuestion = chunkSlug === chunks[chunks.length - 1];
+	const nextButtonText = isLastQuestion
+		? "Unlock summary"
+		: answerStatus === AnswerStatus.BOTH_CORRECT ||
+			  answerStatus === AnswerStatus.SEMI_CORRECT
+		  ? "Continue reading"
+		  : "Skip this question";
+
 	if (!session?.user) {
 		return (
 			<Warning>
 				You need to be logged in to view this question and move forward
 			</Warning>
+		);
+	}
+
+	if (!isFeedbackEnabled) {
+		return (
+			<Card
+				className={cn(
+					"flex justify-center items-center flex-col py-4 px-6 space-y-2",
+				)}
+			>
+				<CardContent className="flex flex-col justify-center items-center space-y-4 w-4/5 mx-auto">
+					{answerStatus !== AnswerStatus.UNANSWERED ? (
+						<div className="flex items-center flex-col">
+							<p className="text-xl2 text-emerald-600 text-center">
+								Your answer was accepted
+							</p>
+							{!isPageFinished && (
+								<p className="text-sm">
+									Click on the button below to continue reading.
+								</p>
+							)}
+						</div>
+					) : (
+						question && (
+							<p>
+								<b>Question:</b> {question}
+							</p>
+						)
+					)}
+
+					<form action={formAction} className="w-full space-y-2">
+						<TextArea
+							name="input"
+							rows={2}
+							className="max-w-lg mx-auto rounded-md shadow-md p-4"
+							onPaste={(e) => {
+								if (isProduction) {
+									e.preventDefault();
+									toast.warning("Copy & Paste is not allowed for question");
+								}
+							}}
+						/>
+						<div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+							{answerStatus === AnswerStatus.UNANSWERED ? (
+								<SubmitButton answerStatus={answerStatus} />
+							) : (
+								isNextButtonDisplayed && (
+									<NextChunkButton
+										pageSlug={pageSlug}
+										chunkSlug={chunkSlug}
+										clickEventType="post-question chunk reveal"
+										onClick={() => setIsNextButtonDisplayed(false)}
+									>
+										{nextButtonText}
+									</NextChunkButton>
+								)
+							)}
+						</div>
+					</form>
+				</CardContent>
+			</Card>
 		);
 	}
 
@@ -240,7 +285,11 @@ export const QuestionBox = ({
 					`${isShaking ? "shake" : ""}`,
 				)}
 			>
-				<Confetti active={answerStatus === AnswerStatus.BOTH_CORRECT} />
+				<Confetti
+					active={
+						answerStatus === AnswerStatus.BOTH_CORRECT && isFeedbackEnabled
+					}
+				/>
 
 				<CardHeader className="flex flex-row justify-center items-baseline w-full p-2 gap-1">
 					<CardDescription className="flex justify-center items-center font-light text-zinc-500 w-10/12 mr-4 text-xs">
@@ -250,14 +299,8 @@ export const QuestionBox = ({
 						make mistakes. Let us know how you feel about iTELL AI's performance
 						using the feedback icons to the right (thumbs up or thumbs down).{" "}
 					</CardDescription>
-					<FeedbackModal
-						type="positive"
-						pageSlug={`${chapter}-${subsection}`}
-					/>
-					<FeedbackModal
-						type="negative"
-						pageSlug={`${chapter}-${subsection}`}
-					/>
+					<FeedbackModal type="positive" pageSlug={pageSlug} />
+					<FeedbackModal type="negative" pageSlug={pageSlug} />
 				</CardHeader>
 
 				<CardContent className="flex flex-col justify-center items-center space-y-4 w-4/5 mx-auto">
@@ -267,11 +310,10 @@ export const QuestionBox = ({
 								<b>iTELL AI says:</b> You likely got a part of the answer wrong.
 								Please try again.
 							</p>
-							<p className="question-box-text">
-								<u>
-									If you believe iTELL AI has made an error, you can click on
-									the "Skip this question" button to skip this question.
-								</u>
+							<p className="question-box-text underline">
+								{isLastQuestion
+									? 'If you believe iTELL AI has made an error, you can click on the "Unlock summary" button to skip this question and start writing a summary.'
+									: 'If you believe iTELL AI has made an error, you can click on the "Skip this question" button to skip this question.'}
 							</p>
 						</div>
 					)}
@@ -287,9 +329,9 @@ export const QuestionBox = ({
 					{answerStatus === AnswerStatus.BOTH_CORRECT ? (
 						<div className="flex items-center flex-col">
 							<p className="text-xl2 text-emerald-600 text-center">
-								Your answer was {isFeedbackEnabled ? "Correct" : "Accepted"}!
+								Your answer was Correct!
 							</p>
-							{isPageMasked && (
+							{!isPageFinished && (
 								<p className="text-sm">
 									Click on the button below to continue reading. Please use the
 									thumbs-up or thumbs-down icons on the top right side of this
@@ -322,7 +364,9 @@ export const QuestionBox = ({
 							{answerStatus !== AnswerStatus.UNANSWERED && (
 								<HoverCard>
 									<HoverCardTrigger asChild>
-										<Button variant="secondary">Reveal Answer</Button>
+										<Button variant="secondary" type="button">
+											Reveal Answer
+										</Button>
 									</HoverCardTrigger>
 									<HoverCardContent className="w-80">
 										<p className="leading-relaxed">{answer}</p>
@@ -332,10 +376,12 @@ export const QuestionBox = ({
 							{answerStatus === AnswerStatus.BOTH_CORRECT &&
 							isNextButtonDisplayed ? (
 								<NextChunkButton
+									pageSlug={pageSlug}
 									clickEventType="post-question chunk reveal"
 									onClick={() => setIsNextButtonDisplayed(false)}
+									chunkSlug={chunkSlug}
 								>
-									Click Here to Continue Reading
+									{nextButtonText}
 								</NextChunkButton>
 							) : (
 								<>
@@ -346,13 +392,13 @@ export const QuestionBox = ({
 									{answerStatus !== AnswerStatus.UNANSWERED &&
 										isNextButtonDisplayed && (
 											<NextChunkButton
+												pageSlug={pageSlug}
+												chunkSlug={chunkSlug}
 												clickEventType="post-question chunk reveal"
 												variant="ghost"
 												onClick={() => setIsNextButtonDisplayed(false)}
 											>
-												{answerStatus === AnswerStatus.SEMI_CORRECT
-													? "Continue Reading"
-													: "Skip this question"}
+												{nextButtonText}
 											</NextChunkButton>
 										)}
 								</>

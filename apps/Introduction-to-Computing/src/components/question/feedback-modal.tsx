@@ -21,7 +21,6 @@ type Props = {
 };
 
 export const FeedbackModal = ({ type, pageSlug }: Props) => {
-	const { data: session } = useSession();
 	const isPositive = type === "positive";
 	const allTags = isPositive
 		? ["informative", "supportive", "helpful"]
@@ -31,20 +30,12 @@ export const FeedbackModal = ({ type, pageSlug }: Props) => {
 	const [isPending, setIsPending] = useState(false);
 
 	const onSubmit = async () => {
-		if (!session?.user) {
-			return toast.warning("You must be logged in to submit feedback.");
-		}
 		setIsPending(true);
 		await createConstructedResponseFeedback({
 			feedback: input,
 			pageSlug,
 			isPositive,
 			tags,
-			user: {
-				connect: {
-					id: session.user.id,
-				},
-			},
 		});
 		setIsPending(false);
 		toast.success("Thanks for your feedback. We'll review it shortly.");
@@ -54,9 +45,9 @@ export const FeedbackModal = ({ type, pageSlug }: Props) => {
 		<Dialog>
 			<DialogTrigger asChild>
 				{isPositive ? (
-					<ThumbsUp className="hover:stroke-emerald-400 hover:cursor-pointer w-4 h-4" />
+					<ThumbsUp className="hover:stroke-emerald-400 hover:cursor-pointer size-4" />
 				) : (
-					<ThumbsDown className="hover:stroke-rose-700 hover:cursor-pointer w-4 h-4" />
+					<ThumbsDown className="hover:stroke-rose-700 hover:cursor-pointer size-4" />
 				)}
 			</DialogTrigger>
 			<DialogContent>

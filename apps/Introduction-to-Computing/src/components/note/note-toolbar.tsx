@@ -19,7 +19,11 @@ import { createNote } from "@/lib/server-actions";
 
 type SelectionData = ReturnType<typeof useTextSelection>;
 
-export const NoteToolbar = ({ chapter }: { chapter: number }) => {
+type Props = {
+	pageSlug: string;
+};
+
+export const NoteToolbar = ({ pageSlug }: Props) => {
 	const [show, setShow] = useState(true);
 	const [target, setTarget] = useState<HTMLElement | null>(null);
 	const noteColor = useNoteColor();
@@ -56,7 +60,7 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 	const commands = [
 		{
 			label: "Note",
-			icon: <PencilIcon className="w-5 h-5" />,
+			icon: <PencilIcon className="size-5" />,
 			action: async ({ clientRect, textContent }: SelectionData) => {
 				if (!window.getSelection) {
 					return toast.error("Your browser does not support taking notes");
@@ -64,7 +68,6 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 				const range = window.getSelection()?.getRangeAt(0);
 				if (range && clientRect && textContent) {
 					const id = crypto.randomUUID();
-					const serializedRange = serializeRange(range);
 					createNoteElements({
 						id,
 						range,
@@ -76,7 +79,7 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 						y: clientRect.y + window.scrollY,
 						highlightedText: textContent,
 						color: noteColor,
-						serializedRange,
+						range: serializeRange(range),
 					});
 				} else {
 					toast.warning("Please select some text to take a note");
@@ -85,7 +88,7 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 		},
 		{
 			label: "Highlight",
-			icon: <HighlighterIcon className="w-5 h-5" />,
+			icon: <HighlighterIcon className="size-5" />,
 			action: async ({ clientRect, textContent }: SelectionData) => {
 				if (!window.getSelection) {
 					return toast.error("Your browser does not support taking notes");
@@ -114,14 +117,9 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 						id,
 						y: clientRect.y + window.scrollY,
 						highlightedText: textContent,
-						chapter,
+						pageSlug,
 						color: defaultHighlightColor,
 						range: serializedRange,
-						user: {
-							connect: {
-								id: session?.user?.id as string,
-							},
-						},
 					});
 
 					createHighlightListeners(id, (event) => {
@@ -134,7 +132,7 @@ export const NoteToolbar = ({ chapter }: { chapter: number }) => {
 		},
 		{
 			label: "Copy",
-			icon: <CopyIcon className="w-5 h-5" />,
+			icon: <CopyIcon className="size-5" />,
 			action: async ({ textContent }: SelectionData) => {
 				if (textContent) {
 					await navigator.clipboard.writeText(textContent);

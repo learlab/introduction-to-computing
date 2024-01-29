@@ -1,18 +1,17 @@
 "use client";
 
-import { useLastVisitedChapterUrl } from "@/lib/hooks/use-last-visited-chapter";
-import Link from "next/link";
-import { buttonVariants } from "@itell/ui/server";
+import { useLastVisitedPageUrl } from "@/lib/hooks/use-last-visited-page";
 import { useTransition } from "react";
-import { Spinner } from "./spinner";
 import { Button } from "./client-components";
 import { useRouter } from "next/navigation";
+import { Spinner } from "./spinner";
+import { firstPageUrl } from "@/lib/constants";
 
 export const StartOrContinueReading = () => {
-	const url = useLastVisitedChapterUrl();
-	const router = useRouter();
+	const url = useLastVisitedPageUrl();
 	const text = url ? "Continue Reading" : "Start Reading";
-	const href = url || "/chapter-0";
+	const href = url || firstPageUrl;
+	const router = useRouter();
 	const [pending, startTransition] = useTransition();
 
 	return (
@@ -25,7 +24,7 @@ export const StartOrContinueReading = () => {
 			disabled={pending}
 			size="lg"
 		>
-			{pending && <Spinner className="w-4 h-4 mr-2" />} {text}
+			{pending && <Spinner className="size-4 mr-2" />} {text}
 		</Button>
 	);
 };

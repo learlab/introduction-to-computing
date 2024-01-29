@@ -9,7 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { setClassSettings, updateUserClassId } from "@/lib/server-actions";
+import { updateUserClassId } from "@/lib/server-actions";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -41,8 +41,6 @@ export const ClassInviteModal = ({ user, teacherToJoin, classId }: Props) => {
 	const joinClass = async () => {
 		setJoinClassLoading(true);
 		await updateUserClassId({ userId: user.id, classId });
-
-		setClassSettings(classId);
 
 		setJoinClassLoading(false);
 

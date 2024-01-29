@@ -43,23 +43,25 @@ export const StudentBadges = async ({ user }: { user: User }) => {
 		<>
 			<DashboardBadge
 				className={
-					comparisons.totalCount >= 0 ? "border-info" : "border-destructive"
+					comparisons.totalCount > 0 ? "border-green-500" : "border-destructive"
 				}
 				title="Total Summaries"
 				value={studentStats.totalCount}
 				description={comparisons.totalCount}
 				comparing
-				icon={<PencilIcon className="w-4 h-4 text-muted-foreground" />}
+				icon={<PencilIcon className="size-4 text-muted-foreground" />}
 			/>
 			<DashboardBadge
 				className={
-					comparisons.passedCount >= 0 ? "border-info" : "border-destructive"
+					comparisons.passedCount > 0
+						? "border-green-500"
+						: "border-destructive"
 				}
 				title="Passed Summaries"
 				value={studentStats.passedCount}
 				description={comparisons.passedCount}
 				comparing
-				icon={<FlagIcon className="w-4 h-4 text-muted-foreground" />}
+				icon={<FlagIcon className="size-4 text-muted-foreground" />}
 			/>
 			<DashboardBadge
 				className={
@@ -71,7 +73,7 @@ export const StudentBadges = async ({ user }: { user: User }) => {
 				value={studentStats.avgContentScore}
 				description={comparisons.avgContentScore}
 				comparing
-				icon={<FileTextIcon className="w-4 h-4 text-muted-foreground" />}
+				icon={<FileTextIcon className="size-4 text-muted-foreground" />}
 			/>
 			<DashboardBadge
 				className={
@@ -83,7 +85,7 @@ export const StudentBadges = async ({ user }: { user: User }) => {
 				value={studentStats.avgWordingScore}
 				description={comparisons.avgWordingScore}
 				comparing
-				icon={<WholeWordIcon className="w-4 h-4 text-muted-foreground" />}
+				icon={<WholeWordIcon className="size-4 text-muted-foreground" />}
 			/>
 		</>
 	);

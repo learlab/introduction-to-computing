@@ -8,32 +8,24 @@ import {
 import { createEvent, createFocusTime } from "@/lib/server-actions";
 import { EventTracker as Tracker } from "@itell/core/components";
 import { FOCUS_TIME_SAVE_INTERVAL } from "@/lib/constants";
-import { User } from "@prisma/client";
+import { getChunkElement } from "@/lib/utils";
+import { useQA } from "../context/qa-context";
 import { useEffect, useState } from "react";
 
-export const EventTracker = ({ user }: { user: User }) => {
-	const [chunks, setChunks] = useState<HTMLDivElement[]>([]);
+export const EventTracker = () => {
+	const { chunks } = useQA();
+	const [els, setEls] = useState<HTMLDivElement[] | undefined>();
 
 	useEffect(() => {
-		const chunks = Array.from(
-			document.querySelectorAll("#page-content .content-chunk"),
-		) as HTMLDivElement[];
-
-		setChunks(chunks);
+		const chunkElements = chunks.map((chunkId) => getChunkElement(chunkId));
+		setEls(chunkElements);
 	}, []);
-
-	if (typeof window === "undefined" || chunks.length === 0) return null;
 
 	const onClick = async (data: ClickEventData) => {
 		createEvent({
 			eventType: "click",
 			page: location.href,
 			data,
-			user: {
-				connect: {
-					id: user.id,
-				},
-			},
 		});
 	};
 
@@ -42,11 +34,6 @@ export const EventTracker = ({ user }: { user: User }) => {
 			eventType: "scroll",
 			page: location.href,
 			data,
-			user: {
-				connect: {
-					id: user.id,
-				},
-			},
 		});
 	};
 
@@ -56,30 +43,24 @@ export const EventTracker = ({ user }: { user: User }) => {
 				eventType: "focus-time",
 				page: location.href,
 				data,
-				user: {
-					connect: {
-						id: user.id,
-					},
-				},
 			});
 
 			createFocusTime({
 				totalViewTime: data.totalViewTime,
-				user: {
-					connect: {
-						id: user.id,
-					},
-				},
 			});
 		}
 	};
+
+	if (!els) {
+		return null;
+	}
 
 	return (
 		<Tracker
 			onClickEvent={onClick}
 			onScrollEvent={onScroll}
 			onFocusTimeEvent={onFocusTime}
-			chunks={chunks}
+			chunks={els}
 			focusTimeSaveInterval={FOCUS_TIME_SAVE_INTERVAL}
 		/>
 	);

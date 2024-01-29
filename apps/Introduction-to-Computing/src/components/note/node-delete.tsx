@@ -34,9 +34,9 @@ export const NoteDelete = ({ open, onOpenChange, onDelete }: Props) => {
 				onOpenChange(val);
 			}}
 		>
-			<AlertDialogTrigger>
+			<AlertDialogTrigger asChild>
 				<Button variant="ghost" size="sm" type="button">
-					<TrashIcon className="w-4 h-4" />
+					<TrashIcon className="size-4" />
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>

@@ -13,8 +13,8 @@ import { useState } from "react";
 import {
 	ChevronDownIcon,
 	ChevronUpIcon,
+	CompassIcon,
 	FileBoxIcon,
-	GraduationCapIcon,
 	LineChartIcon,
 	LogOutIcon,
 	SettingsIcon,
@@ -24,7 +24,6 @@ import Link from "next/link";
 import UserAvatar from "./user-avatar";
 
 export const UserAccountNav = () => {
-	const [isSignOutLoading, setIsSignOutLoading] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const { data: session, status } = useSession();
 	const user = session?.user;
@@ -42,7 +41,7 @@ export const UserAccountNav = () => {
 	}
 
 	return (
-		<div className="ml-auto">
+		<div className="ml-auto flex items-center gap-1">
 			<DropdownMenu open={menuOpen} onOpenChange={(val) => setMenuOpen(val)}>
 				<DropdownMenuTrigger className="flex items-center gap-1">
 					<UserAvatar
@@ -54,9 +53,9 @@ export const UserAccountNav = () => {
 						}}
 					/>
 					{menuOpen ? (
-						<ChevronUpIcon className="h-4 w-4" />
+						<ChevronUpIcon className="size-4" />
 					) : (
-						<ChevronDownIcon className="h-4 w-4" />
+						<ChevronDownIcon className="size-4" />
 					)}
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
@@ -74,43 +73,36 @@ export const UserAccountNav = () => {
 					<DropdownMenuSeparator />
 					<DropdownMenuItem asChild>
 						<Link href="/dashboard">
-							<LineChartIcon className="h-4 w-4 mr-2" /> Dashboard
+							<LineChartIcon className="size-4 mr-2" /> Dashboard
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<Link href="/dashboard/summaries">
-							<FileBoxIcon className="h-4 w-4 mr-2" />
+							<FileBoxIcon className="size-4 mr-2" />
 							Summaries
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<Link href="/dashboard/settings">
-							<SettingsIcon className="h-4 w-4 mr-2" /> Settings
+							<SettingsIcon className="size-4 mr-2" /> Settings
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
-						<Link href="/dashboard/class">
-							<GraduationCapIcon className="h-4 w-4 mr-2" /> Class
+						<Link href="/guide">
+							<CompassIcon className="size-4 mr-2" /> Guide
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						className="cursor-pointer"
-						disabled={isSignOutLoading}
-						onSelect={async (event) => {
+						onSelect={(event) => {
 							event.preventDefault();
-							setIsSignOutLoading(true);
-							await signOut({
+							signOut({
 								callbackUrl: `${window.location.origin}/auth`,
 							});
-							setIsSignOutLoading(false);
 						}}
 					>
-						{isSignOutLoading ? (
-							<Spinner className="w-4 h-4 mr-2" />
-						) : (
-							<LogOutIcon className="w-4 h-4 mr-2" />
-						)}
+						<LogOutIcon className="size-4 mr-2" />
 						Sign out
 					</DropdownMenuItem>
 				</DropdownMenuContent>

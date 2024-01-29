@@ -2,86 +2,109 @@
 
 import { Warning } from "@itell/ui/server";
 import { SummaryFeedback } from "./summary-feedback";
-import { PAGE_SUMMARY_THRESHOLD } from "@/lib/constants";
-import { ErrorFeedback, SummaryFormState } from "@itell/core/summary";
+import { ErrorFeedback } from "@itell/core/summary";
 import { SummaryInput } from "./summary-input";
 import { useFormState } from "react-dom";
 import { SummarySubmitButton } from "./summary-submit-button";
 import { SummaryProceedModal } from "./summary-proceed-modal";
-import pluralize from "pluralize";
-import { makeInputKey } from "@/lib/utils";
-import { Confetti } from "../ui/confetti";
+import { makeInputKey, makePageHref } from "@/lib/utils";
+import Confetti from "react-dom-confetti";
+import { useQA } from "../context/qa-context";
+import { useEffect } from "react";
+import { FormState } from "./page-summary";
+import { useRouter } from "next/navigation";
 
 type Props = {
-	isFeedbackEnabled: boolean;
-	chapter: number;
+	value?: string;
+	pageSlug: string;
+	inputEnabled?: boolean; // needed to force enabled input for summary edit page
 	textareaClassName?: string;
-	onSubmit: (
-		prevState: SummaryFormState,
-		formData: FormData,
-	) => Promise<SummaryFormState>;
-};
-
-const initialState: SummaryFormState = {
-	response: null,
-	feedback: null,
-	canProceed: false,
-	error: null,
+	isFeedbackEnabled: boolean;
+	initialState: FormState;
+	onSubmit: (prevState: FormState, formData: FormData) => Promise<FormState>;
 };
 
 export const SummaryForm = ({
+	value,
+	inputEnabled,
+	pageSlug,
 	isFeedbackEnabled,
-	chapter,
+	initialState,
 	onSubmit,
 	textareaClassName,
 }: Props) => {
 	const [formState, formAction] = useFormState(onSubmit, initialState);
+	const router = useRouter();
+	const { isPageFinished, pageStatus } = useQA();
+
+	const editDisabled = inputEnabled
+		? false
+		: pageStatus.isPageUnlocked
+		  ? false
+		  : !isPageFinished;
+
+	useEffect(() => {
+		if (formState.showQuiz) {
+			router.push(`${makePageHref(pageSlug)}/quiz`);
+		}
+	}, [formState]);
 
 	return (
-		<>
-			{formState.feedback && <SummaryFeedback feedback={formState.feedback} />}
-			<Confetti active={formState.feedback?.isPassed || false} />
+		<section>
+			{formState.feedback && (
+				<SummaryFeedback
+					pageSlug={pageSlug}
+					feedback={formState.feedback}
+					canProceed={formState.canProceed}
+				/>
+			)}
+			<Confetti
+				active={formState.feedback?.isPassed ? isFeedbackEnabled : false}
+			/>
 			<form
 				className="mt-2 space-y-4"
 				action={(payload) => {
 					localStorage.setItem(
-						makeInputKey(chapter),
+						makeInputKey(pageSlug),
 						payload.get("input") as string,
 					);
 					formAction(payload);
 				}}
 			>
-				<SummaryInput chapter={chapter} textAreaClassName={textareaClassName} />
+				<SummaryInput
+					value={value}
+					disabled={editDisabled}
+					pageSlug={pageSlug}
+					textAreaClassName={textareaClassName}
+				/>
 				{formState.error && <Warning>{ErrorFeedback[formState.error]}</Warning>}
 				<div className="flex justify-end">
-					<SummarySubmitButton />
+					<SummarySubmitButton disabled={!isPageFinished} />
 				</div>
 			</form>
-			{formState.canProceed && (
+			{formState.canProceed && !formState.showQuiz && (
 				<SummaryProceedModal
-					chapter={chapter}
+					pageSlug={pageSlug}
 					isPassed={formState.feedback?.isPassed || false}
 					title={
 						isFeedbackEnabled
 							? formState.feedback?.isPassed
-								? "Good job summarizing the text"
-								: "You can now move on"
+								? "Good job summarizing the text 🎉"
+								: "You can now move on 👏"
 							: "Your summary is accepted"
 					}
 				>
-					<div>
-						{formState.feedback?.isPassed ? (
-							<p>You can now move on to the next page</p>
-						) : (
-							<p>
-								You have written more than{" "}
-								{pluralize("summary", PAGE_SUMMARY_THRESHOLD, true)} for this
-								page, you can now move on to the next page
-							</p>
+					<div className="space-y-2">
+						{!formState.feedback?.isPassed && (
+							<p>You have written multiple summaries for this page.</p>
 						)}
+						<p>
+							You can now move on to the next page by clicking the page link
+							above the summary box or the left sidebar.
+						</p>
 					</div>
 				</SummaryProceedModal>
 			)}
-		</>
+		</section>
 	);
 };

@@ -1,28 +1,71 @@
-import { Chapter } from "contentlayer/generated";
-import { allChaptersSorted } from "./chapters";
 import type { PageLinkData } from "@itell/ui/client";
+import { allPagesSorted } from "./pages";
+import { PageData, getPageData } from "./utils";
 
-export const getPagerLinksForChapter = (index: number) => {
-	const pagerData: { prev: PageLinkData | null; next: PageLinkData | null } = {
+export const getPagerLinks = ({
+	pageIndex,
+	userPageSlug,
+}: { pageIndex: number; userPageSlug: string | null }) => {
+	const links: { prev: PageLinkData | null; next: PageLinkData | null } = {
 		prev: null,
 		next: null,
 	};
 
-	if (index !== 0) {
-		const chapter = allChaptersSorted[index - 1];
-		pagerData.prev = {
-			text: `${chapter.chapter}. ${chapter.title}`,
-			href: `/${chapter.url}`,
+	const userPage = getPageData(userPageSlug);
+
+	if (!userPage) {
+		const nextPage =
+			pageIndex + 1 < allPagesSorted.length - 1
+				? allPagesSorted[pageIndex + 1]
+				: null;
+		const prevPage = pageIndex > 0 ? allPagesSorted[pageIndex - 1] : null;
+
+		links.next = nextPage
+			? {
+					text: `${nextPage.location.chapter}.${nextPage.location.section} ${nextPage.title}`,
+					href: nextPage.url,
+					disabled: false,
+			  }
+			: null;
+
+		links.prev = prevPage
+			? {
+					text: `${prevPage.location.chapter}.${prevPage.location.section} ${prevPage.title}`,
+					href: prevPage.url,
+					disabled: false,
+			  }
+			: null;
+
+		return links;
+	}
+
+	if (pageIndex > 0) {
+		const page = allPagesSorted[pageIndex - 1];
+		const disabled = userPageSlug
+			? userPage.index < pageIndex - 1
+			: pageIndex < 2
+			  ? false
+			  : true;
+		links.prev = {
+			text: `${page.location.chapter}.${page.location.section} ${page.title}`,
+			href: page.url,
+			disabled,
 		};
 	}
 
-	if (index !== allChaptersSorted.length - 1) {
-		const chapter = allChaptersSorted[index + 1];
-		pagerData.next = {
-			text: `${chapter.chapter}. ${chapter.title}`,
-			href: `/${chapter.url}`,
+	if (pageIndex < allPagesSorted.length - 1) {
+		const page = allPagesSorted[pageIndex + 1];
+		const disabled = userPageSlug
+			? userPage.index < pageIndex + 1
+			: pageIndex === 0
+			  ? false
+			  : true;
+		links.next = {
+			text: `${page.location.chapter}.${page.location.section} ${page.title}`,
+			href: page.url,
+			disabled,
 		};
 	}
 
-	return pagerData;
+	return links;
 };

@@ -1,8 +1,5 @@
 "use client";
 
-import { User } from "@prisma/client";
-import { Column, ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, LinkIcon, MoreHorizontal } from "lucide-react";
 import {
 	Button,
 	DropdownMenu,
@@ -12,12 +9,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/client-components";
+import { User } from "@prisma/client";
+import { Column, ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, LinkIcon, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { buttonVariants } from "@itell/ui/server";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type StudentData = Pick<User, "id" | "email" | "name" | "created_at"> & {
-	progress: number;
+	progress: { chapter: number; section: number; title: string; index: number };
 	summaryCounts: number;
 };
 
@@ -32,7 +31,7 @@ const ColumnWithSorting = ({
 			className="pl-0"
 		>
 			{text}
-			<ArrowUpDown className="ml-2 h-4 w-4" />
+			<ArrowUpDown className="ml-2 size-4" />
 		</Button>
 	);
 };
@@ -63,8 +62,20 @@ export const columns: ColumnDef<StudentData>[] = [
 		id: "Progress",
 		accessorKey: "progress",
 		header: ({ column }) => ColumnWithSorting({ column, text: column.id }),
+		sortingFn: (rowA, rowB, columnId) => {
+			if (rowA.original.progress.chapter > rowB.original.progress.chapter) {
+				return 1;
+			}
+
+			if (rowA.original.progress.chapter === rowB.original.progress.chapter) {
+				return rowA.original.progress > rowB.original.progress ? 1 : -1;
+			}
+
+			return -1;
+		},
 		cell: ({ row }) => {
-			return `Chapter ${row.original.progress}`;
+			const progress = row.original.progress;
+			return `${progress.chapter}.${progress.section} ${progress.title}`;
 		},
 	},
 	{
@@ -92,7 +103,7 @@ export const columns: ColumnDef<StudentData>[] = [
 					<DropdownMenuTrigger asChild>
 						<Button variant="ghost" className="h-8 w-8 p-0">
 							<span className="sr-only">Open menu</span>
-							<MoreHorizontal className="h-4 w-4" />
+							<MoreHorizontal className="size-4" />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">

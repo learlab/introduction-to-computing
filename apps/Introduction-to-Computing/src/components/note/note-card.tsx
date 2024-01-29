@@ -1,8 +1,8 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditIcon } from "lucide-react";
-import { NoteCard } from "@/types/note";
+import { NoteCard as NoteCardType } from "@/types/note";
 import { useClickOutside } from "@itell/core/hooks";
 import { NoteDelete } from "./node-delete";
 import { cn, relativeDate } from "@itell/core/utils";
@@ -18,11 +18,10 @@ import {
 	getElementsByNoteId,
 } from "@itell/core/note";
 import { createNote, deleteNote, updateNote } from "@/lib/server-actions";
-import { useSession } from "next-auth/react";
 import { useFormStatus } from "react-dom";
 
-interface Props extends NoteCard {
-	chapter: number;
+interface Props extends NoteCardType {
+	pageSlug: string;
 	newNote?: boolean;
 }
 
@@ -50,21 +49,18 @@ type EditDispatch =
 // on mouse enter, add class = "emphasize"
 // on delete add class = "unhighlighted"
 // styles are in global.css
-export default function ({
+export const NoteCard = ({
 	id,
 	y,
 	highlightedText,
 	noteText,
-	chapter,
+	pageSlug,
 	updated_at,
 	created_at,
-	serializedRange,
+	range,
 	color,
 	newNote = false,
-}: Props) {
-	const { data: session } = useSession();
-	const [input, setInput] = useState(noteText || "");
-
+}: Props) => {
 	const elementsRef = useRef<HTMLElement[]>();
 	const elements = elementsRef.current;
 	const [shouldCreate, setShouldCreate] = useState(newNote);
@@ -72,7 +68,8 @@ export default function ({
 		newNote ? undefined : id,
 	);
 
-	const isUnsaved = !recordId || input !== noteText;
+	const isUnsaved = !recordId;
+	const [text, setText] = useState(noteText);
 
 	const [editState, dispatch] = useImmerReducer<EditState, EditDispatch>(
 		(draft, action) => {
@@ -130,25 +127,18 @@ export default function ({
 
 	const formAction = async (data: FormData) => {
 		const input = data.get("input") as string;
+		setText(input);
 		if (shouldCreate) {
 			// create new note
-			await createNote(
-				{
-					id,
-					y,
-					noteText: input,
-					highlightedText,
-					chapter,
-					color: editState.color,
-					range: serializedRange,
-					user: {
-						connect: {
-							id: session?.user?.id as string,
-						},
-					},
-				},
-				false,
-			); // do not revalidate
+			await createNote({
+				id,
+				y,
+				noteText: input,
+				highlightedText,
+				pageSlug,
+				color: editState.color,
+				range,
+			});
 			setRecordId(id);
 			setShouldCreate(false);
 		} else {
@@ -213,21 +203,22 @@ export default function ({
 		// for new note, spans are created in note-toolbar.tsx
 		if (!newNote) {
 			try {
-				createNoteElements({
-					id,
-					range: deserializeRange(serializedRange),
-					color,
-				});
+				setTimeout(() => {
+					createNoteElements({
+						id,
+						range: deserializeRange(range),
+						color,
+					});
+					// elementsRef should be set after the note elements are created
+					// in the case of new note, they are already created by the toolbar
+					elementsRef.current = Array.from(
+						getElementsByNoteId(id) || [],
+					) as HTMLElement[];
+				}, 300);
 			} catch (err) {
 				console.error("create note element", err);
 			}
 		}
-
-		// elementsRef should be set after the note elements are created
-		// in the case of new note, they are already created by the toolbar
-		elementsRef.current = Array.from(
-			getElementsByNoteId(id) || [],
-		) as HTMLElement[];
 	}, []);
 
 	const FormFooter = () => {
@@ -248,7 +239,7 @@ export default function ({
 					/>
 					{editState.editing && (
 						<Button disabled={pending} variant="ghost" size="sm" type="submit">
-							{pending ? <Spinner /> : <ForwardIcon className="w-4 h-4" />}
+							{pending ? <Spinner /> : <ForwardIcon className="size-4" />}
 						</Button>
 					)}
 				</div>
@@ -294,7 +285,7 @@ export default function ({
 
 				<div className="font-light tracking-tight text-sm relative p-2">
 					{editState.collapsed ? (
-						<p className="line-clamp-3 text-sm mb-0">{input || "Note"}</p>
+						<p className="line-clamp-3 text-sm mb-0">{text || "Note"}</p>
 					) : (
 						<div className="mt-1">
 							<NoteColorPicker
@@ -319,8 +310,7 @@ export default function ({
 										autoFocus
 										autoHeight
 										name="input"
-										value={input}
-										onValueChange={setInput}
+										defaultValue={text}
 									/>
 								) : (
 									<button
@@ -331,7 +321,7 @@ export default function ({
 										className="flex w-full text-left px-1 py-2 rounded-md hover:bg-accent"
 									>
 										<span className="mb-0">
-											{input || <EditIcon className="w-4 h-4" />}
+											{text || <EditIcon className="size-4" />}
 										</span>
 									</button>
 								)}
@@ -349,4 +339,4 @@ export default function ({
 			</div>
 		</div>
 	);
-}
+};

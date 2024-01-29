@@ -5,7 +5,11 @@ import { Skeleton, buttonVariants } from "@itell/ui/server";
 import Link from "next/link";
 import pluralize from "pluralize";
 
-export const SummaryCount = async ({ chapter }: { chapter: number }) => {
+type Props = {
+	pageSlug: string;
+};
+
+export const SummaryCount = async ({ pageSlug }: Props) => {
 	const user = await getCurrentUser();
 	if (!user) {
 		return null;
@@ -17,7 +21,7 @@ export const SummaryCount = async ({ chapter }: { chapter: number }) => {
 		},
 		where: {
 			userId: user.id,
-			chapter: chapter,
+			pageSlug,
 		},
 	});
 	const passedSummaryCount =

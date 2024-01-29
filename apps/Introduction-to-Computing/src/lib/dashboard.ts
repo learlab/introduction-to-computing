@@ -1,6 +1,8 @@
+import { getDatesBetween } from "@itell/core/utils";
 import { type Prisma } from "@prisma/client";
+import { format, subDays } from "date-fns";
 import db from "./db";
-import { subDays } from "date-fns";
+import { FocusTimeData, getTotalViewTime } from "./focus-time";
 
 export const getSummaryStats = async ({
 	where,
@@ -39,7 +41,7 @@ export const getClassStudents = async (classId: string) => {
 };
 
 export const getClassStudentStats = async (classId: string) => {
-	return await db.user.findMany({
+	const students = await db.user.findMany({
 		where: {
 			classId,
 		},
@@ -47,16 +49,27 @@ export const getClassStudentStats = async (classId: string) => {
 			id: true,
 			name: true,
 			email: true,
-			chapter: true,
+			pageSlug: true,
 			created_at: true,
 			_count: {
 				select: {
 					summaries: true,
 				},
 			},
+			QuizAnswer: {
+				select: {
+					data: true,
+					pageSlug: true,
+					created_at: true,
+				},
+			},
 		},
 	});
+
+	return students;
 };
+
+export type StudentStats = Awaited<ReturnType<typeof getClassStudentStats>>;
 
 export const getStudentsCount = async (classId: string) => {
 	return await db.user.count({
@@ -68,12 +81,12 @@ export const getStudentsCount = async (classId: string) => {
 
 export const getRecentSummaries = async (uid: string) => {
 	// fetch summaries during last week
-	const targetDate = subDays(new Date(), 7);
+	const targetDate = subDays(new Date(), 6);
 	const summaries = await db.summary.findMany({
 		where: {
 			userId: uid,
 			created_at: {
-				gt: targetDate,
+				gte: targetDate,
 			},
 		},
 		orderBy: {

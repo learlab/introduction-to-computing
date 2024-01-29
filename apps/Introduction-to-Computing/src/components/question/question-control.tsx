@@ -6,31 +6,36 @@ import { useQA } from "../context/qa-context";
 import { createPortal } from "react-dom";
 import { NextChunkButton } from "./next-chunk-button";
 import { ScrollBackButton } from "./scroll-back-button";
-
-type Question = { question: string; answer: string };
+import { SelectedQuestions } from "@/lib/question";
+import { getChunkElement } from "@/lib/utils";
 
 type Props = {
-	isPageMasked: boolean;
-	selectedQuestions: Map<number, Question>;
-	chapter: number;
+	selectedQuestions: SelectedQuestions;
+	pageSlug: string;
 	isFeedbackEnabled: boolean;
 };
 
 export const QuestionControl = ({
-	isFeedbackEnabled,
-	isPageMasked,
 	selectedQuestions,
-	chapter,
+	pageSlug,
+	isFeedbackEnabled,
 }: Props) => {
 	// Ref for current chunk
-	const { currentChunk, chunks, setChunks } = useQA();
 	const [nodes, setNodes] = useState<JSX.Element[]>([]);
+	const {
+		currentChunk,
+		chunks,
+		isPageFinished,
+		setIsPageFinished,
+		isLastChunkWithQuestion,
+	} = useQA();
 
 	const addNode = (node: JSX.Element) => {
 		setNodes((nodes) => [...nodes, node]);
 	};
 
-	const hideNextChunkButton = (el: HTMLDivElement) => {
+	const hideNextChunkButton = (chunkId: string) => {
+		const el = getChunkElement(chunkId);
 		const button = el.querySelector(
 			":scope .next-chunk-button-container",
 		) as HTMLDivElement;
@@ -55,10 +60,21 @@ export const QuestionControl = ({
 		}
 	};
 
-	const insertNextChunkButton = (el: HTMLDivElement) => {
+	const hideScrollBackButton = () => {
+		const button = document.querySelector(
+			".scroll-back-button-container",
+		) as HTMLDivElement;
+
+		if (button) {
+			button.remove();
+		}
+	};
+
+	const insertNextChunkButton = (el: HTMLDivElement, chunkSlug: string) => {
 		// insert button container
 		const buttonContainer = document.createElement("div");
-		buttonContainer.className = "next-chunk-button-container";
+		buttonContainer.className =
+			"next-chunk-button-container flex justify-center items-center p-4 gap-2";
 		el.style.filter = "none";
 		el.appendChild(buttonContainer);
 
@@ -66,6 +82,8 @@ export const QuestionControl = ({
 			createPortal(
 				<NextChunkButton
 					clickEventType="chunk reveal"
+					chunkSlug={chunkSlug}
+					pageSlug={pageSlug}
 					standalone
 					className="bg-red-400  hover:bg-red-200 text-white m-2 p-2"
 				>
@@ -76,87 +94,93 @@ export const QuestionControl = ({
 		);
 	};
 
-	const insertQuestion = (el: HTMLDivElement, index: number) => {
+	const insertQuestion = (el: HTMLDivElement, chunkId: string) => {
 		const questionContainer = document.createElement("div");
 		questionContainer.className = "question-container";
 		el.appendChild(questionContainer);
 
-		const q = selectedQuestions.get(index) as Question;
+		const q = selectedQuestions.get(chunkId);
 
-		addNode(
-			createPortal(
-				<QuestionBox
-					isFeedbackEnabled={isFeedbackEnabled}
-					isPageMasked={isPageMasked}
-					question={q.question}
-					answer={q.answer}
-					chapter={chapter}
-					subsection={index}
-				/>,
-				questionContainer,
-			),
-		);
-	};
-
-	useEffect(() => {
-		const els = document.querySelectorAll(".content-chunk");
-		if (els.length > 0) {
-			setChunks(Array.from(els) as HTMLDivElement[]);
-		}
-	}, []);
-
-	const handleChunk = (el: HTMLDivElement, index: number) => {
-		const isChunkUnvisited = index > currentChunk;
-		if (selectedQuestions.has(index)) {
-			insertQuestion(el, index);
-		}
-
-		if (isPageMasked) {
-			if (index !== 0 && isChunkUnvisited) {
-				el.style.filter = "blur(4px)";
-			}
-
-			if (chunks && index === chunks.length - 1) {
-				insertScrollBackButton(el);
-			}
+		if (q) {
+			addNode(
+				createPortal(
+					<QuestionBox
+						question={q.question}
+						answer={q.answer}
+						chunkSlug={chunkId}
+						pageSlug={pageSlug}
+						isFeedbackEnabled={isFeedbackEnabled}
+					/>,
+					questionContainer,
+				),
+			);
 		}
 	};
 
-	const handleChunkProgress = (
-		chunks: HTMLDivElement[],
-		currentChunk: number,
-	) => {
-		const currentChunkElement = chunks.at(currentChunk);
-		const prevChunkElement = chunks.at(currentChunk - 1);
+	const maskChunk = (chunkId: string, chunkIndex: number) => {
+		const el = getChunkElement(chunkId);
+		const currentIndex = chunks.indexOf(currentChunk);
+		const isChunkUnvisited = currentIndex === -1 || chunkIndex > currentIndex;
+		if (selectedQuestions.has(chunkId)) {
+			insertQuestion(el, chunkId);
+		}
 
-		if (currentChunkElement) {
+		if (chunkIndex !== 0 && isChunkUnvisited) {
+			el.style.filter = "blur(4px)";
+		}
+
+		if (chunkIndex === chunks.length - 1) {
+			insertScrollBackButton(el);
+		}
+	};
+
+	const revealChunk = (currentChunk: string) => {
+		const idx = chunks.indexOf(currentChunk);
+		if (idx === -1) {
+			return;
+		}
+
+		const currentChunkId = chunks.at(idx);
+		const prevChunkId = idx > 0 ? chunks.at(idx - 1) : undefined;
+
+		if (currentChunkId) {
+			const currentChunkElement = getChunkElement(currentChunkId);
 			currentChunkElement.style.filter = "none";
-			if (
-				!selectedQuestions.has(currentChunk) &&
-				currentChunk !== chunks.length - 1
-			) {
-				insertNextChunkButton(currentChunkElement);
+			if (!selectedQuestions.has(currentChunkId) && idx !== chunks.length - 1) {
+				insertNextChunkButton(currentChunkElement, currentChunk);
 			}
 		}
 
 		// when a fresh page is loaded,. set up ref data and prepare chunk styles
-		if (currentChunk !== 0 && prevChunkElement) {
-			hideNextChunkButton(prevChunkElement);
+		if (prevChunkId) {
+			hideNextChunkButton(prevChunkId);
+		}
+
+		if (idx === chunks.length - 1) {
+			hideScrollBackButton();
 		}
 	};
 
 	useEffect(() => {
-		// set up chunks
-		if (chunks) {
-			chunks.forEach(handleChunk);
+		if (!isPageFinished) {
+			chunks.forEach(maskChunk);
 		}
-	}, [chunks]);
+	}, []);
 
 	useEffect(() => {
-		if (chunks && isPageMasked) {
-			handleChunkProgress(chunks, currentChunk);
+		if (!isPageFinished) {
+			revealChunk(currentChunk);
+			// in the special case of the last chunk with a question
+			// the page is not considered finished when currentChunk === lastChunk
+			// when the last chunk contains the question
+			// page finished is controlled via the corresponding question-box -> next-chunk-button
+			if (!isLastChunkWithQuestion) {
+				if (currentChunk === chunks[chunks.length - 1]) {
+					setIsPageFinished(true);
+				}
+			}
 		}
-	}, [chunks, currentChunk]);
+	}, [currentChunk]);
 
 	return nodes;
 };
