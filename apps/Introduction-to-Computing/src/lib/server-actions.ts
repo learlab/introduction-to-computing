@@ -1,10 +1,11 @@
 "use server";
 
 import { Prisma } from "@prisma/client";
-import db from "./db";
-import { cookies } from "next/headers";
-import { isLastChapter } from "./chapters";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { getCurrentUser, getServerAuthSession } from "./auth";
+import db from "./db";
+import { isPageAfter, nextPage } from "./location";
 
 export const deleteSummary = async (id: string) => {
 	return await db.summary.delete({
@@ -15,9 +16,7 @@ export const deleteSummary = async (id: string) => {
 };
 
 export const createSummary = async (input: Prisma.SummaryCreateInput) => {
-	return await db.summary.create({
-		data: input,
-	});
+	return await db.summary.create({ data: input });
 };
 
 export const updateSummary = async (
@@ -38,23 +37,42 @@ export const deleteNote = async (id: string) => {
 			id,
 		},
 	});
-	revalidatePath(".");
 };
 
 export const createConstructedResponse = async (
-	input: Prisma.ConstructedResponseCreateInput,
+	input: Omit<Prisma.ConstructedResponseCreateInput, "user">,
 ) => {
-	return await db.constructedResponse.create({
-		data: input,
-	});
+	const user = await getCurrentUser();
+	if (user) {
+		return await db.constructedResponse.create({
+			data: {
+				...input,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
+	}
 };
 
 export const createConstructedResponseFeedback = async (
-	input: Prisma.ConstructedResponseFeedbackCreateInput,
+	input: Omit<Prisma.ConstructedResponseFeedbackCreateInput, "user">,
 ) => {
-	return await db.constructedResponseFeedback.create({
-		data: input,
-	});
+	const user = await getCurrentUser();
+	if (user) {
+		return await db.constructedResponseFeedback.create({
+			data: {
+				...input,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
+	}
 };
 
 export const updateUser = async (
@@ -86,34 +104,34 @@ export const updateUserClassId = async ({
 	});
 };
 
-export const incrementUserChapter = async (userId: string, chapter: number) => {
+export const incrementUserPage = async (userId: string, pageSlug: string) => {
 	const user = await db.user.findUnique({ where: { id: userId } });
 	if (user) {
-		const userChapter = user.chapter;
-		// only update if the call is from the user's current chapter
-		if (userChapter === chapter && !isLastChapter(chapter)) {
-			return await db.user.update({
+		const nextSlug = nextPage(pageSlug);
+		// only update a slug if user's slug is not greater
+		if (isPageAfter(nextSlug, user.pageSlug)) {
+			await db.user.update({
 				where: {
 					id: userId,
 				},
 				data: {
-					chapter: {
-						increment: 1,
-					},
+					pageSlug: nextSlug,
 				},
 			});
+
+			revalidatePath(".");
 		}
 	}
 };
 
-export const getUserChapterSummaryCount = async (
+export const getUserPageSummaryCount = async (
 	userId: string,
-	chapter: number,
+	pageSlug: string,
 ) => {
 	return await db.summary.count({
 		where: {
 			userId,
-			chapter,
+			pageSlug,
 		},
 	});
 };
@@ -141,42 +159,112 @@ export const getTeacherWithClassId = async (classId: string | null) => {
 	return user;
 };
 
-export const createEvent = async (input: Prisma.EventCreateInput) => {
-	return await db.event.create({
-		data: input,
-	});
+export const createEvent = async (
+	input: Omit<Prisma.EventCreateInput, "user">,
+) => {
+	const user = await getCurrentUser();
+	if (user) {
+		return await db.event.create({
+			data: {
+				...input,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
+	}
 };
 
-export const createFocusTime = async (input: Prisma.FocusTimeCreateInput) => {
-	return await db.focusTime.create({
-		data: input,
-	});
+export const createFocusTime = async (
+	input: Omit<Prisma.FocusTimeCreateInput, "user">,
+) => {
+	const user = await getCurrentUser();
+	if (user) {
+		return await db.focusTime.create({
+			data: {
+				...input,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
+	}
 };
 
 export const createNote = async (
-	data: Prisma.NoteCreateInput,
-	revalidate = true,
+	input: Omit<Prisma.NoteCreateInput, "user">,
 ) => {
-	await db.note.create({ data });
-
-	if (revalidate) {
-		revalidatePath(".");
+	const user = await getCurrentUser();
+	if (user) {
+		await db.note.create({
+			data: {
+				...input,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
 	}
 };
 
 export const updateNote = async (id: string, data: Prisma.NoteUpdateInput) => {
 	await db.note.update({ where: { id }, data });
-
-	revalidatePath(".");
 };
 
-export const setClassSettings = (classId: string) => {
-	if (classId === "wes_class") {
-		cookies().set(
-			"class_settings",
-			JSON.stringify({
-				no_feedback_pages: [1, 2],
-			}),
-		);
+export const createQuizAnswer = async ({
+	pageSlug,
+	data,
+}: { pageSlug: string; data: Record<string, any> }) => {
+	const user = await getCurrentUser();
+	if (user) {
+		await db.quizAnswer.create({
+			data: {
+				pageSlug,
+				data,
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		});
+
+		finishQuiz(pageSlug);
 	}
+};
+
+const quizCookieKey = (pageSlug: string) => `quiz-${pageSlug}-finished`;
+
+export const maybeCreateQuizCookie = (pageSlug: string) => {
+	// return true if the cookie was created
+	const key = quizCookieKey(pageSlug);
+	const c = cookies();
+	if (!c.has(key)) {
+		c.set(key, "false");
+		return true;
+	}
+
+	return false;
+};
+
+export const finishQuiz = (pageSlug: string) => {
+	const key = quizCookieKey(pageSlug);
+	const c = cookies();
+	c.set(key, "true");
+};
+
+export const isPageQuizUnfinished = (pageSlug: string) => {
+	const key = quizCookieKey(pageSlug);
+	const c = cookies();
+	if (c.has(key)) {
+		return c.get(key)?.value === "false";
+	}
+
+	return false;
 };
