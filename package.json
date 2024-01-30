@@ -26,6 +26,7 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "node-html-parser": "^6.1.12",
     "turbo": "^1.9.3"
   }
 }
