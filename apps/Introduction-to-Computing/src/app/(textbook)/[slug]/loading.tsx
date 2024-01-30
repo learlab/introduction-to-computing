@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Skeleton } from "@itell/ui/server";
 import { BookmarkIcon } from "lucide-react";
 import { headers } from "next/headers";

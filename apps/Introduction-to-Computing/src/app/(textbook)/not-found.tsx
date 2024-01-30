@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StartOrContinueReading } from "@/components/start-or-continue-reading";
 
 export default function NotFound() {

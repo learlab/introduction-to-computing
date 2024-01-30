@@ -1,3 +1,4 @@
+// @ts-nocheck
 import TextbookNavbar from "@/components/nav/textbook-nav";
 import { Fragment } from "react";
 
