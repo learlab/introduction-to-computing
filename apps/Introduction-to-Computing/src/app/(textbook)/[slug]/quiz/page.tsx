@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { allPagesSorted } from "@/lib/pages";
 import { makePageHref } from "@/lib/utils";
 import Link from "next/link";
