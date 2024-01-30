@@ -5,20 +5,14 @@
   "description": "",
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "docs"
+    "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
     "build:core": "turbo run build --filter @itell/core",
-    "build:poe": "turbo run build --scope @itell/example-poe",
     "build:ui": "turbo run build --filter @itell/ui",
-    "build:docs": "turbo run build --filter @itell/docs",
     "build:tailwind": "turbo run build --filter @itell/tailwind",
     "dev": "turbo run dev",
-    "dev:poe": "turbo run dev --filter @itell/example-poe",
-    "dev:tp": "turbo run dev --filter @itell/example-think-python",
-    "dev:docs": "turbo run dev --filter @itell/docs",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "clean": "turbo run clean"
@@ -26,9 +20,6 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
-    "node-html-parser": "^6.1.12",
-    "rehype-katex": "^7.0.0",
-    "remark-math": "^6.0.0",
     "turbo": "^1.9.3"
   }
 }

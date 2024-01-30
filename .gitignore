@@ -1,8 +1,6 @@
 /.env
-.idea/introduction-to-computing.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+.idea
+.DS_Store
 /apps/Introduction-to-Computing/node_modules/
 /node_modules/
 /packages/core/node_modules/
