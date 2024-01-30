@@ -27,6 +27,7 @@
   "license": "ISC",
   "dependencies": {
     "node-html-parser": "^6.1.12",
+    "rehype-katex": "^7.0.0",
     "turbo": "^1.9.3"
   }
 }

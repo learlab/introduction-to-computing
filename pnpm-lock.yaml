@@ -11,6 +11,9 @@ importers:
       node-html-parser:
         specifier: ^6.1.12
         version: 6.1.12
+      rehype-katex:
+        specifier: ^7.0.0
+        version: 7.0.0
       turbo:
         specifier: ^1.9.3
         version: 1.11.3
