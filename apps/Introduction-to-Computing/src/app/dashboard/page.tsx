@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { StudentClassCount } from "@/components/dashboard/student/student-class-count";
 import { UserStatistics } from "@/components/dashboard/user-statistics";

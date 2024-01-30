@@ -49,7 +49,7 @@ const initialState: FormState = {
 	feedback: null,
 	canProceed: false,
 	error: null,
-	showQuiz: false,
+	showQuiz: false
 };
 
 export default async function ({ params }: PageProps) {

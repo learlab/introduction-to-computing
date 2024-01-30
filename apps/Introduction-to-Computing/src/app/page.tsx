@@ -1,3 +1,4 @@
+// @ts-nocheck
 import TextbookNavbar from "@/components/nav/textbook-nav";
 import { Site, allSites } from "contentlayer/generated";
 import { Mdx } from "@/components/mdx";

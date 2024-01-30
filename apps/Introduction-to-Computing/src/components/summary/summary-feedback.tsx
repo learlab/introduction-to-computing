@@ -1,9 +1,9 @@
+import { Accordion, AccordionItem } from "@/components/ui/accordion";
+import { getPageData, makePageHref } from "@/lib/utils";
+import { SummaryFeedback as SummaryFeedbackType } from "@itell/core/summary";
 import { Info, Warning } from "@itell/ui/server";
-import { Accordion, AccordionItem } from "../client-components";
-import { SummaryFeedbackType } from "@itell/core/summary";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
-import { getPageData, makePageHref } from "@/lib/utils";
 
 type Props = {
 	canProceed: boolean;
@@ -49,13 +49,16 @@ export const SummaryFeedback = ({ feedback, canProceed, pageSlug }: Props) => {
 						title="Scoring details"
 						accordionTriggerClassName="text-sm underline-none"
 					>
-						{feedback.promptDetails.map((detail) => (
-							<p key={detail.type} className="space-x-1">
-								<span>{detail.feedback.isPassed ? "✅" : "❌"}</span>
-								<span className="font-semibold">{detail.type}:</span>
-								<span>{detail.feedback.prompt}</span>
-							</p>
-						))}
+						{feedback.promptDetails.map(
+							(detail) =>
+								detail.feedback.prompt && (
+									<p key={detail.type} className="space-x-1">
+										<span>{detail.feedback.is_passed ? "✅" : "❌"}</span>
+										<span className="font-semibold">{detail.type}:</span>
+										<span>{detail.feedback.prompt}</span>
+									</p>
+								),
+						)}
 					</AccordionItem>
 				</Accordion>
 			)}
