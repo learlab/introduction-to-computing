@@ -1,10 +1,11 @@
 "use client";
 
 import { TextArea } from "@/components/client-components";
-import { makeInputKey } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { cn, numOfWords } from "@itell/core/utils";
 import { isProduction } from "@/lib/constants";
+import { makeInputKey } from "@/lib/utils";
+import { cn, numOfWords } from "@itell/core/utils";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
@@ -20,9 +21,17 @@ export const SummaryInput = ({
 	textAreaClassName,
 	value = "",
 }: Props) => {
-	const [input, setInput] = useState(value);
+	const searchParams = useSearchParams();
+	const summaryToRevise = searchParams?.get("summary");
+	const text = summaryToRevise
+		? Buffer.from(summaryToRevise, "base64").toString("ascii")
+		: value;
+	const [input, setInput] = useState(text);
+
 	useEffect(() => {
-		setInput(localStorage.getItem(makeInputKey(pageSlug)) || value);
+		if (!summaryToRevise) {
+			setInput(localStorage.getItem(makeInputKey(pageSlug)) || value);
+		}
 	}, []);
 
 	return (
