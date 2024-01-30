@@ -16,16 +16,14 @@ export const TeacherClassGeneral = async ({
 		if (page) {
 			progress = {
 				chapter: page.chapter,
-				section: page.section,
 				index: page.index,
 				title: page.title,
 			};
 		} else {
 			progress = {
 				chapter: 1,
-				section: 1,
 				index: 1,
-				title: "What is Law",
+				title: "Control Structures",
 			};
 		}
 

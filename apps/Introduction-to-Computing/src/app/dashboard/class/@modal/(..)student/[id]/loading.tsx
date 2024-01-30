@@ -1,11 +1,8 @@
-import { StudentDetailsModal } from "@/components/dashboard/student/student-details-modal";
 import { Spinner } from "@/components/spinner";
 import {
-	Dialog,
-	DialogDescription,
-	DialogHeader,
+	Dialog, DialogHeader,
 	DialogTitle,
-	InterceptedDialogContent,
+	InterceptedDialogContent
 } from "@/components/ui/dialog";
 
 export default function () {

@@ -9,7 +9,6 @@ import {
 import { Suspense } from "react";
 import { TeacherBadges } from "./teacher-badges";
 import { TeacherClassGeneral } from "./teacher-class-general";
-import { TeacherClassQuiz } from "./teacher-class-quiz";
 
 export const TeacherClass = async ({ classId }: { classId: string }) => {
 	const students = await getClassStudentStats(classId);
@@ -36,9 +35,6 @@ export const TeacherClass = async ({ classId }: { classId: string }) => {
 					<TeacherClassGeneral students={students} />
 				</Suspense>
 
-				<Suspense fallback={<TeacherClassQuiz.Skeleton />}>
-					<TeacherClassQuiz students={students} />
-				</Suspense>
 			</CardContent>
 		</Card>
 	);

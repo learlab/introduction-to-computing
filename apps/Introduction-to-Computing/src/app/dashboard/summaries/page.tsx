@@ -3,15 +3,25 @@ import { SummaryList } from "@/components/dashboard/summary-list";
 import { DashboardShell } from "@/components/shell";
 import { getCurrentUser } from "@/lib/auth";
 import db from "@/lib/db";
-import { allPagesSorted } from "@/lib/pages";
+import { redirect } from "next/navigation";
 import { getUser } from "@/lib/user";
-import { groupby } from "@itell/core/utils";
 import { User } from "@prisma/client";
-import { Page } from "contentlayer/generated";
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
+import { SummaryCount } from "@/components/summary/summary-count";
+import pluralize from "pluralize";
+import { allPagesSorted } from "@/lib/pages";
+import { ChapterSelect } from "@/components/dashboard/summary-chapter-select";
 
-export default async function () {
+type PageProps = {
+	searchParams: {
+		chapter?: string;
+	};
+};
+
+export default async function ({ searchParams }: PageProps) {
+	const { chapter } = searchParams;
+	const queryChapter = chapter ? parseInt(chapter) : 1;
+	const pageSlugs = allPagesSorted.filter((p) => p.chapter === queryChapter).map((p) => p.page_slug);
 	const currentUser = await getCurrentUser();
 	if (!currentUser) {
 		return redirect("/auth");
@@ -22,58 +32,34 @@ export default async function () {
 		db.summary.findMany({
 			where: {
 				userId: currentUser.id,
+				pageSlug: {
+					in: pageSlugs,
+				}
 			},
 			orderBy: [{ created_at: "desc" }],
 		}),
 	]);
 
-	if (!userSummaries) {
-		return notFound();
-	}
-
-	if (userSummaries.length === 0) {
-		return (
-			<DashboardShell>
-				<DashboardHeader
-					heading="Summary"
-					text="Create and manage summaries."
-				/>
-				<p className="p-2">
-					You have not made any summary yet. Start with{" "}
-					<Link href="/what-is-law" className="underline font-medium">
-						What is Law
-					</Link>
-					!
-				</p>
-			</DashboardShell>
-		);
-	}
-
-	// // convert date here since they will be passed from server components to client components
-	const summaries = userSummaries
-		.map((s) => {
-			const page = allPagesSorted.find(
-				(section) => section.page_slug === s.pageSlug,
-			);
-
-			if (!page) {
-				return undefined;
-			}
-
-			return {
-				...s,
-				module: page.location.module as number,
-				pageTitle: page.title,
-			};
-		})
-		.filter(Boolean);
-
-	const summariesByModule = groupby(summaries, (summary) => summary.module);
-
 	return (
 		<DashboardShell>
-			<DashboardHeader heading="Summary" text="Create and manage summaries." />
-			<SummaryList summariesByModule={summariesByModule} user={user as User} />
+			<DashboardHeader heading="Summary" text="Create and manage summaries" />
+			<ChapterSelect defaultChapter={queryChapter} />
+			<div className="p-2 space-y-4">
+				{userSummaries.length === 0 ? (
+					<p className=" text-muted-foreground text-sm">No summary found</p>
+				) : (
+					<Suspense key={chapter} fallback={<p>hello world</p>}>
+						<p className="text-sm leading-relaxed">
+							{`You have written ${pluralize(
+								"summary",
+								userSummaries.length,
+								true,
+							)} ${queryChapter ? `for chapter ${queryChapter}` : ""}`}
+						</p>
+						<SummaryList summaries={userSummaries} user={user as User} />
+					</Suspense>
+				)}
+			</div>
 		</DashboardShell>
 	);
 }

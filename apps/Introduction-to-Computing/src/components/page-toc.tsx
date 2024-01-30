@@ -27,11 +27,9 @@ export const PageToc = ({ headings }: TocSidebarProps) => {
 								data-level={heading.level}
 								href={`#${heading.slug}`}
 								className={cn("hover:underline inline-flex ", {
-									"text-lg": heading.level === "two",
-									"text-base pl-1": heading.level === "three",
-									"text-sm pl-2": heading.level === "four",
-									"text-muted-foreground text-sm pl-4":
-										heading.level === "other",
+									"text-base": heading.level === "two",
+									"text-sm pl-2 text-muted-foreground": heading.level === "three",
+									"text-xs pl-4 text-muted-foreground": heading.level === "four",
 								})}
 							>
 								{heading.text}

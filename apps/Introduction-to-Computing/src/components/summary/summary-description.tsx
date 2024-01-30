@@ -1,5 +1,5 @@
 import { Site, allSites } from "contentlayer/generated";
-import { MainMdx } from "../mdx";
+import { MainMdx } from "../main-mdx";
 
 const description = allSites.find(
 	(doc) => doc.slug === "summary-description",

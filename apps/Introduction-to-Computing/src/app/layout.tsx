@@ -1,4 +1,4 @@
-import { GeistSans as FontSans } from "geist/font";
+import { GeistSans as FontSans } from "geist/font/sans";
 import { IBM_Plex_Mono as FontMono } from "next/font/google";
 import "@/styles/globals.css";
 import ShowToast from "@/components/toast";

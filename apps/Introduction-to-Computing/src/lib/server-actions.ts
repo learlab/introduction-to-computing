@@ -1,9 +1,10 @@
 "use server";
 
+import { FocusTimeEventData } from "@itell/core/types";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { getCurrentUser, getServerAuthSession } from "./auth";
+import { getCurrentUser } from "./auth";
 import db from "./db";
 import { isPageAfter, nextPage } from "./location";
 
@@ -177,21 +178,64 @@ export const createEvent = async (
 	}
 };
 
-export const createFocusTime = async (
-	input: Omit<Prisma.FocusTimeCreateInput, "user">,
-) => {
+export const findFocusTime = async (userId: string, pageSlug: string) => {
+	return await db.focusTime.findUnique({
+		where: {
+			userId_pageSlug: {
+				userId,
+				pageSlug,
+			},
+		},
+	});
+};
+
+export const createFocusTime = async ({
+	data,
+	pageSlug,
+}: { data: FocusTimeEventData; pageSlug: string }) => {
 	const user = await getCurrentUser();
 	if (user) {
-		return await db.focusTime.create({
-			data: {
-				...input,
-				user: {
-					connect: {
-						id: user.id,
-					},
+		const record = await db.focusTime.findUnique({
+			where: {
+				userId_pageSlug: {
+					userId: user.id,
+					pageSlug,
 				},
 			},
 		});
+
+		if (record) {
+			const oldData = record.data as FocusTimeEventData;
+			const newData: FocusTimeEventData = {};
+			// if there are legacy chunk ids that's not present in the new data
+			// they will dropped during the update
+			for (const chunkId in data) {
+				if (chunkId in oldData) {
+					newData[chunkId] = oldData[chunkId] + data[chunkId];
+				} else {
+					newData[chunkId] = data[chunkId];
+				}
+			}
+			await db.focusTime.update({
+				where: {
+					userId_pageSlug: {
+						userId: user.id,
+						pageSlug,
+					},
+				},
+				data: {
+					data: newData,
+				},
+			});
+		} else {
+			await db.focusTime.create({
+				data: {
+					userId: user.id,
+					pageSlug,
+					data,
+				},
+			});
+		}
 	}
 };
 

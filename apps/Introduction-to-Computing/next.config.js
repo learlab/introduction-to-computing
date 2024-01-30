@@ -1,7 +1,4 @@
 const { withContentlayer } = require("next-contentlayer");
-const {
-	withHydrationOverlay,
-} = require("@builder.io/react-hydration-overlay/next");
 
 const config = {
 	output: "standalone",
@@ -31,7 +28,7 @@ const config = {
 };
 
 module.exports = withContentlayer(
-	withHydrationOverlay({ appRootSelector: "main" })(config),
+	config,
 );
 
 const securityHeaders = [

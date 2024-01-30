@@ -1,4 +1,4 @@
-import { MainMdx } from "../mdx";
+import { MainMdx } from "../main-mdx";
 
 export const PageContent = ({ code }: { code: string }) => {
 	return (

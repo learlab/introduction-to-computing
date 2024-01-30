@@ -3,6 +3,12 @@
 import { useTrackLastVisitedPage } from "@/lib/hooks/use-last-visited-page";
 import { QAProvider } from "../context/qa-context";
 import { PageStatus } from "@/lib/page-status";
+import { PythonProvider as WebpyProvider } from "@webpy/react";
+
+const pythonSetupCode = `
+import io
+import contextlib
+`;
 
 type Props = {
 	pageSlug: string;
@@ -22,13 +28,15 @@ export const PageProvider = ({
 	useTrackLastVisitedPage();
 
 	return (
-		<QAProvider
-			pageSlug={pageSlug}
-			chunks={chunks}
-			pageStatus={pageStatus}
-			isLastChunkWithQuestion={isLastChunkWithQuestion}
-		>
-			{children}
-		</QAProvider>
+		<WebpyProvider options={{ setUpCode: pythonSetupCode }}>
+			<QAProvider
+				pageSlug={pageSlug}
+				chunks={chunks}
+				pageStatus={pageStatus}
+				isLastChunkWithQuestion={isLastChunkWithQuestion}
+			>
+				{children}
+			</QAProvider>
+		</WebpyProvider>
 	);
 };

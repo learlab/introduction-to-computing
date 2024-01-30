@@ -34,18 +34,6 @@ export const authOptions: NextAuthOptions = {
 		session({ session, user }) {
 			if (session.user) {
 				session.user.id = user.id;
-				if (session.user.email) {
-					const classOneEmails = (env.CLASS_ONE_EMAILS as string[]) || [];
-					const classTwoEmails = (env.CLASS_TWO_EMAILS as string[]) || [];
-
-					if (classOneEmails.includes(session.user.email)) {
-						session.user.class = "one";
-					} else if (classTwoEmails.includes(session.user.email)) {
-						session.user.class = "two";
-					} else {
-						session.user.class = undefined;
-					}
-				}
 			}
 			return session;
 		},

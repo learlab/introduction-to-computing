@@ -1,49 +1,17 @@
+import { getCurrentUser } from "@/lib/auth";
+import { Warning } from "@itell/ui/server";
 import { Fragment, Suspense } from "react";
 import { SummaryCount } from "./summary-count";
 import { SummaryDescription } from "./summary-description";
-import { getCurrentUser } from "@/lib/auth";
-import {
-	ErrorType,
-	SummaryFeedbackType,
-	SummaryFormState,
-	getFeedback,
-	simpleFeedback,
-	validateSummary,
-} from "@itell/core/summary";
-import { getScore } from "@/lib/summary";
-import {
-	createSummary,
-	getUserPageSummaryCount,
-	incrementUserPage,
-	isPageQuizUnfinished,
-	maybeCreateQuizCookie,
-} from "@/lib/server-actions";
-import { isLastPage } from "@/lib/location";
-import { PAGE_SUMMARY_THRESHOLD } from "@/lib/constants";
-import { Warning } from "@itell/ui/server";
 import { SummaryForm } from "./summary-form";
-import { allPagesSorted } from "@/lib/pages";
-import { Page } from "contentlayer/generated";
 
 type Props = {
 	pageSlug: string;
 	isFeedbackEnabled: boolean;
 };
 
-export type FormState = SummaryFormState & {
-	showQuiz: boolean;
-};
-
-const initialState: FormState = {
-	feedback: null,
-	canProceed: false,
-	error: null,
-	showQuiz: false,
-};
-
 export const PageSummary = async ({ pageSlug, isFeedbackEnabled }: Props) => {
 	const user = await getCurrentUser();
-	const page = allPagesSorted.find((p) => p.page_slug === pageSlug) as Page;
 
 	if (!user) {
 		return (
@@ -64,105 +32,6 @@ export const PageSummary = async ({ pageSlug, isFeedbackEnabled }: Props) => {
 		);
 	}
 
-	const onSubmit = async (
-		prevState: FormState,
-		formData: FormData,
-	): Promise<FormState> => {
-		"use server";
-		if (!user) {
-			return {
-				...prevState,
-				error: ErrorType.INTERNAL,
-			};
-		}
-
-		const input = formData.get("input") as string;
-		const userId = user.id;
-
-		const error = await validateSummary(input);
-		if (error) {
-			return { ...prevState, error };
-		}
-
-		let feedback: SummaryFeedbackType;
-		if (isFeedbackEnabled) {
-			const response = await getScore({ input, pageSlug });
-			if (!response.success) {
-				return {
-					...prevState,
-					error: ErrorType.INTERNAL,
-				};
-			}
-			feedback = getFeedback(response.data);
-			await createSummary({
-				text: input,
-				pageSlug,
-				isPassed: feedback.isPassed,
-				containmentScore: response.data.containment,
-				similarityScore: response.data.similarity,
-				wordingScore: response.data.wording,
-				contentScore: response.data.content,
-				user: {
-					connect: {
-						id: userId,
-					},
-				},
-			});
-		} else {
-			feedback = simpleFeedback();
-			await createSummary({
-				text: input,
-				pageSlug,
-				isPassed: feedback.isPassed,
-				containmentScore: -1,
-				similarityScore: -1,
-				wordingScore: -1,
-				contentScore: -1,
-				user: {
-					connect: {
-						id: userId,
-					},
-				},
-			});
-		}
-
-		if (page.quiz) {
-			maybeCreateQuizCookie(pageSlug);
-		}
-
-		const showQuiz = page.quiz ? isPageQuizUnfinished(pageSlug) : false;
-
-		if (feedback.isPassed) {
-			await incrementUserPage(userId, pageSlug);
-
-			return {
-				canProceed: !isLastPage(pageSlug),
-				feedback,
-				error: null,
-				showQuiz,
-			};
-		}
-
-		const summaryCount = await getUserPageSummaryCount(userId, pageSlug);
-		if (summaryCount >= PAGE_SUMMARY_THRESHOLD) {
-			await incrementUserPage(userId, pageSlug);
-
-			return {
-				canProceed: !isLastPage(pageSlug),
-				feedback,
-				error: null,
-				showQuiz,
-			};
-		}
-
-		return {
-			canProceed: false,
-			feedback,
-			error: null,
-			showQuiz: false,
-		};
-	};
-
 	return (
 		<section
 			className="flex flex-col sm:flex-row gap-8 mt-10 border-t-2 py-4"
@@ -179,9 +48,8 @@ export const PageSummary = async ({ pageSlug, isFeedbackEnabled }: Props) => {
 						</Suspense>
 					) : null}
 					<SummaryForm
+						user={user}
 						pageSlug={pageSlug}
-						onSubmit={onSubmit}
-						initialState={initialState}
 						isFeedbackEnabled={isFeedbackEnabled}
 					/>
 				</Fragment>

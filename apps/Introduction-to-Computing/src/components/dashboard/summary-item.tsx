@@ -4,14 +4,16 @@ import { Summary } from "@prisma/client";
 import { cn, relativeDate } from "@itell/core/utils";
 import { Skeleton, buttonVariants } from "@itell/ui/server";
 import { CheckCircle, XCircle } from "lucide-react";
-import { SummaryData } from "./summary-list";
+import { getPageData } from "@/lib/utils";
 
 interface PostItemProps {
-	summary: SummaryData;
+	summary: Summary
 	timeZone: string;
 }
 
 export function SummaryItem({ summary, timeZone }: PostItemProps) {
+	const page = getPageData(summary.pageSlug)
+	if (!page) return null;
 	return (
 		<Link
 			href={`/summary/${summary.id}`}
@@ -22,7 +24,7 @@ export function SummaryItem({ summary, timeZone }: PostItemProps) {
 		>
 			<header className="flex justify-between text-sm text-muted-foreground">
 				<p className="font-semibold text-lg leading-relaxed">
-					{summary.pageTitle}
+					{page.title}
 				</p>
 				<p>{relativeDate(summary.created_at, timeZone)}</p>
 			</header>
