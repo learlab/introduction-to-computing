@@ -1,3 +1,4 @@
+// @ts-ignore
 import { allPagesSorted } from "@/lib/pages";
 
 export const generateStaticParams = async () => {
