@@ -1,13 +1,12 @@
-import { GeistSans as FontSans } from "geist/font/sans";
-import { IBM_Plex_Mono as FontMono } from "next/font/google";
-import "@/styles/globals.css";
-import ShowToast from "@/components/toast";
-import { Suspense } from "react";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { cn } from "@itell/core/utils";
-import { Metadata } from "next";
-import { getSiteConfig } from "@/lib/config";
 import { RootProvider } from "@/components/provider/root-provider";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { getSiteConfig } from "@/lib/config";
+import "@/styles/globals.css";
+import { cn } from "@itell/core/utils";
+import { GeistSans as FontSans } from "geist/font/sans";
+import { Metadata } from "next";
+import { IBM_Plex_Mono as FontMono } from "next/font/google";
+import { Suspense } from "react";
 
 export async function generateMetadata(): Promise<Metadata> {
 	const siteConfig = await getSiteConfig();
@@ -44,9 +43,6 @@ export default async function RootLayout({
 				)}
 			>
 				<RootProvider>
-					<Suspense fallback={null}>
-						<ShowToast />
-					</Suspense>
 					<TailwindIndicator />
 					<main>{children}</main>
 				</RootProvider>

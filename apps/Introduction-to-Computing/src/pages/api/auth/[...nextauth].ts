@@ -1,23 +1,22 @@
 import { env } from "@/env.mjs";
 import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import AzureADProvider from "next-auth/providers/azure-ad";
+import GoogleProvider from "next-auth/providers/google";
 
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import db from "@/lib/db";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 export const authOptions: NextAuthOptions = {
 	adapter: PrismaAdapter(db),
 	secret: process.env.NEXTAUTH_SECRET,
 	providers: [
-		GoogleProvider({
-			clientId: env.GOOGLE_CLIENT_ID,
-			clientSecret: env.GOOGLE_CLIENT_SECRET,
-		}),
 		AzureADProvider({
+			id: "azure-ad",
+			name: "Azure AD",
 			clientId: env.AZURE_CLIENT_ID,
 			clientSecret: env.AZURE_CLIENT_SECRET,
 			tenantId: "common",
+			allowDangerousEmailAccountLinking: true,
 			authorization: {
 				params: {
 					prompt: "consent",
@@ -33,16 +32,6 @@ export const authOptions: NextAuthOptions = {
 				session.user.id = user.id;
 			}
 			return session;
-		},
-		redirect: async ({ url, baseUrl }) => {
-			const suffix = url.endsWith("?auth-redirect=true")
-				? ""
-				: "?auth-redirect=true";
-			// Allows relative callback URLs
-			if (url.startsWith("/")) return `${baseUrl}${url}${suffix}`;
-			// Allows callback URLs on the same origin
-			else if (new URL(url).origin === baseUrl) return `${url}${suffix}`;
-			return `${baseUrl}${suffix}`;
 		},
 	},
 	cookies: {

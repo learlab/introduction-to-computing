@@ -10,8 +10,10 @@ import db from "./db";
 export const authOptions: NextAuthOptions = {
 	adapter: PrismaAdapter(db),
 	secret: process.env.NEXTAUTH_SECRET,
+
 	providers: [
 		AzureADProvider({
+			id: "azure-ad",
 			clientId: env.AZURE_CLIENT_ID,
 			clientSecret: env.AZURE_CLIENT_SECRET,
 			tenantId: "common",
