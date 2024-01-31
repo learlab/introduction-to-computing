@@ -154,10 +154,7 @@ You might notice in the previous example that something risky could happen. What
   
 These are very easy to create. This simple loop in Figure 3.3.10, for example, will never end. We create i, our loop control variable, and assign it the value 1. Then, we create a while loop that repeats as long as i is greater than 0. Every time it repeats, we just print i. What will the result be here? Simple: it will just print 1 over and over and over again, millions of times per second if our computer allows it. If the loop repeats so long as i is greater than 0 and the value of i never changes, then the loop will never terminate.
 
-<Notebook code = {`#Figure 3.3.10`}/>  
-<Notebook code = {`i = 1`}/>  
-<Notebook code = {`while i > 0:`}/>  
-<Notebook code = {`    print(i)`}/>
+<Notebook code = {`#Figure 3.3.10\ni = 1\nwhile i > 0:\n    print(i)`}/>
 
 Infinite loops are errors, but they’re interesting errors in that they generally don’t give us any actual error messages. When we use a variable outside its scope or divide by zero, the computer tells us, “Hey, you can’t do that!” But when we have an infinite loop in our code, it just runs and runs and runs. If your code is complex, it can be tough to tell if it’s just running normally and taking a while, or encountering an infinite loop. print() statements can help with this: if you use print debugging and see the same thing printed over and over again, it often means you’re looping over the same thing over and over. I can say, personally, I’ve done that many times, usually just by forgetting to add that last line that increments some loop control variable.
 </div>
