@@ -1,21 +1,24 @@
 "use client";
 
-import useDriver from "use-driver";
-import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
+import { usePython } from "@/lib/hooks/ues-python";
+import { cn } from "@itell/core/utils";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
+import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import {
+	CircleEllipsisIcon,
+	HelpCircleIcon,
 	PlayIcon,
 	PlusIcon,
 	RotateCcwIcon,
-	XIcon,
 	SquareIcon,
-	HelpCircleIcon,
-	CircleEllipsisIcon,
+	XIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@itell/core/utils";
 import { useTheme } from "next-themes";
-import { PythonResult, baseExtensions, createShortcuts } from "./editor-config";
+import { useEffect, useRef, useState } from "react";
+import { memo } from "react";
+import { toast } from "sonner";
+import useDriver from "use-driver";
+import "use-driver/dist/driver.css";
 import {
 	Button,
 	DropdownMenu,
@@ -28,11 +31,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../client-components";
-import { usePython } from "@/lib/hooks/ues-python";
-import { memo } from "react";
+import { PythonResult, baseExtensions, createShortcuts } from "./editor-config";
 import { CellData, CellMode, CellStatus } from "./types";
-import "use-driver/dist/driver.css";
-import { toast } from "sonner";
 
 // io and contextlib is imported as setup code in providers
 const codeWithStd = (code: string) => {
@@ -55,7 +55,7 @@ export const Cell = memo(
 			createShortcuts([
 				{
 					key: "Shift-Enter",
-					run: (view) => {
+					run: () => {
 						run();
 						return true;
 					},
@@ -123,71 +123,54 @@ export const Cell = memo(
 					"animate-border-color": isCellRunning,
 				})}
 			>
-				<div className="grid grid-cols-[40px_1fr] gap-4">
-					<div className="border-r flex flex-col gap-1 justify-center">
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="ghost" className="p-0 h-full">
-									<CircleEllipsisIcon className="h-5 w-5" />
-									<span className="sr-only">Open</span>
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end" className="min-w-[20px] p-0">
-								<DropdownMenuItem>
-									<Button
-										size="sm"
-										variant="ghost"
-										disabled={isRunning}
-										onClick={async () => {
-											if (!isRunning) {
-												await run();
-											}
-										}}
-										{...register({
-											order: 2,
-											popover: {
-												title: "Run Code",
-												description:
-													"Click on this button to run your code in the editor",
-											},
-										})}
-									>
-										{isRunning ? (
-											<SquareIcon className="w-4 h-4 mr-2" />
-										) : (
-											<PlayIcon className="w-4 h-4 mr-2" />
-										)}
-										<span>Run</span>
-									</Button>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Button
-										size={"sm"}
-										variant={"ghost"}
-										onClick={reset}
-										{...register({
-											order: 3,
-											popover: {
-												title: "Reset Code",
-												description:
-													"Click on this button to reset your code in the editor",
-											},
-										})}
-									>
-										<RotateCcwIcon className="w-4 h-4 mr-2" />
-										<span>Reset</span>
-									</Button>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Button size={"sm"} variant={"ghost"} onClick={help}>
-										<HelpCircleIcon className="w-4 h-4 mr-2" />
-										<span>Help</span>
-									</Button>
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
-
+				<div className="px-2">
+					<header className="flex gap-1 items-center">
+						<Button
+							size="sm"
+							variant="ghost"
+							disabled={isRunning}
+							onClick={async () => {
+								if (!isRunning) {
+									await run();
+								}
+							}}
+							{...register({
+								order: 2,
+								popover: {
+									title: "Run Code",
+									description:
+										"Click on this button to run your code in the editor",
+								},
+							})}
+						>
+							{isRunning ? (
+								<SquareIcon className="w-4 h-4 mr-2" />
+							) : (
+								<PlayIcon className="w-4 h-4 mr-2" />
+							)}
+							<span>Run</span>
+						</Button>
+						<Button
+							size={"sm"}
+							variant={"ghost"}
+							onClick={reset}
+							{...register({
+								order: 3,
+								popover: {
+									title: "Reset Code",
+									description:
+										"Click on this button to reset your code in the editor",
+								},
+							})}
+						>
+							<RotateCcwIcon className="w-4 h-4 mr-2" />
+							<span>Reset</span>
+						</Button>
+						<Button size={"sm"} variant={"ghost"} onClick={help}>
+							<HelpCircleIcon className="w-4 h-4 mr-2" />
+							<span>Help</span>
+						</Button>
+					</header>
 					<div>
 						<div
 							className="relative"
@@ -205,11 +188,21 @@ export const Cell = memo(
 								extensions={extensions}
 								theme={theme === "light" ? githubLight : githubDark}
 								basicSetup={{
-									lineNumbers: false,
+									lineNumbers: true,
 								}}
 								ref={editorRef}
 							/>
-							<div className="absolute top-2 right-2 z-10">
+							<div
+								className="absolute top-2 right-2 z-10"
+								{...register({
+									order: 4,
+									popover: {
+										title: "Switch Editor Mode",
+										description:
+											"Switch between Script and REPL mode. In the REPL mode, the output of the last expression is displayed. In the Script mode, all output needs to be printed using the print function.",
+									},
+								})}
+							>
 								<Select
 									value={cellMode}
 									onValueChange={(val) => setCellMode(val as CellMode)}
