@@ -1,5 +1,5 @@
-import { Button, Pager } from "@/components/client-components";
-import { ModuleSidebar } from "@/components/module-sidebar";
+import { ChapterToc } from "@/components/chapter-toc";
+import { Pager } from "@/components/client-components";
 import { NoteCount } from "@/components/note/note-count";
 import { NoteList } from "@/components/note/note-list";
 import { NoteToolbar } from "@/components/note/note-toolbar";
@@ -8,7 +8,6 @@ import { PageStatusModal } from "@/components/page-status/page-status-modal";
 import { PageTitle } from "@/components/page-title";
 import { PageToc } from "@/components/page-toc";
 import { PageContent } from "@/components/page/page-content";
-import { RestartPageButton } from "@/components/page/restart-page-button";
 import { PageProvider } from "@/components/provider/page-provider";
 import { QuestionControl } from "@/components/question/question-control";
 import { Spinner } from "@/components/spinner";
@@ -22,73 +21,14 @@ import { getPageStatus } from "@/lib/page-status";
 import { getPagerLinks } from "@/lib/pager";
 import { allPagesSorted } from "@/lib/pages";
 import { getRandomPageQuestions } from "@/lib/question";
-import { getModuleChapters } from "@/lib/sidebar";
 import { getUser } from "@/lib/user";
-import { Page } from "contentlayer/generated";
-import {
-	ArrowUpIcon,
-	EyeIcon,
-	LockIcon,
-	PencilIcon,
-	UnlockIcon,
-} from "lucide-react";
+import { EyeIcon, LockIcon, UnlockIcon } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Fragment, Suspense } from "react";
-
-const AnchorLink = ({
-						text,
-						href,
-						icon,
-					}: { text: string; href: string; icon: React.ReactNode }) => {
-	return (
-		<a href={href} className="block">
-			<Button
-				variant="ghost"
-				className="flex flex-wrap justify-start items-center gap-2 pl-0"
-			>
-				{icon}
-				{text}
-			</Button>
-		</a>
-	);
-};
-
-export const LeftAside = ({ page }: { page: Page }) => {
-	const chapters = getModuleChapters(page.location.module);
-
-	return (
-		<aside className="module-sidebar col-span-2 sticky top-20 h-fit">
-			<ModuleSidebar
-				chapters={chapters}
-				currentPage={{
-					chapter: page.location.chapter,
-					section: page.location.section,
-					url: page.url,
-				}}
-			/>
-			<div className="mt-12 space-y-2">
-				<RestartPageButton pageSlug={page.page_slug} />
-				{page.summary && (
-					<AnchorLink
-						icon={<PencilIcon className="size-4" />}
-						text="Write a summary"
-						href="#page-summary"
-					/>
-				)}
-				<AnchorLink
-					icon={<ArrowUpIcon className="size-4" />}
-					text="Back to top"
-					href="#page-title"
-				/>
-			</div>
-		</aside>
-	);
-};
+import { Suspense } from "react";
 
 export default async function ({ params }: { params: { slug: string } }) {
 	const sessionUser = await getCurrentUser();
 	const user = sessionUser ? await getUser(sessionUser.id) : null;
-
 	const pageIndex = allPagesSorted.findIndex((section) => {
 		return section.page_slug === params.slug;
 	});
@@ -126,7 +66,7 @@ export default async function ({ params }: { params: { slug: string } }) {
 			isLastChunkWithQuestion={isLastChunkWithQuestion}
 		>
 			<div className="max-w-[1440px] mx-auto grid grid-cols-12 gap-6 px-2">
-				<LeftAside page={page} />
+				<ChapterToc page={page} />
 
 				<section className="page-content relative col-span-8">
 					<PageTitle>
@@ -180,7 +120,7 @@ export default async function ({ params }: { params: { slug: string } }) {
 				pageSlug={pageSlug}
 				isFeedbackEnabled={isFeedbackEnabled}
 			/>
-			{user && isProduction && <EventTracker />}
+			{user && <EventTracker pageSlug={pageSlug} />}
 		</PageProvider>
 	);
 }
