@@ -1,3 +1,4 @@
+import { firstLockedPageSlug } from "./constants";
 import { isPageAfter, isPageUnlockedWithoutUser } from "./location";
 
 export type PageStatus = {
@@ -14,7 +15,7 @@ export const getPageStatus = (
 	if (!userPageSlug) {
 		return {
 			isPageUnlocked: isPageUnlockedWithoutUser(pageSlug),
-			isPageLatest: pageSlug === "control-structures",
+			isPageLatest: pageSlug === firstLockedPageSlug,
 		};
 	}
 
