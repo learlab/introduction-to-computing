@@ -5,6 +5,7 @@ import { allPagesSorted } from "@/lib/pages";
 import { cn } from "@itell/core/utils";
 import Link from "next/link";
 import { makePageHref } from "@/lib/utils";
+import {RestartPageButton} from "@/components/page/restart-page-button";
 
 const AnchorLink = ({
     text,
@@ -54,6 +55,7 @@ export const ChapterToc = ({ page }: Props) => {
                 </ol>
             </nav>
             <div className="mt-12 flex flex-col gap-2">
+                <RestartPageButton pageSlug={page.page_slug} />
                 {page.summary && (
                     <AnchorLink
                         icon={<PencilIcon className="w-4 h-4" />}
