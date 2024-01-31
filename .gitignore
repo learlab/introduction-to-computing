@@ -14,3 +14,6 @@
 /packages/core/dist/
 /packages/tailwind/dist/
 /.turbo/
+/docs/.next/
+/docs/.turbo/
+/docs/node_modules/
