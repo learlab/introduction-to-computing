@@ -11,7 +11,7 @@ quiz: false
 \- Recognize Python function errors,including parameter mismatch and scope errors;  
 \- Equip their user-facing turtle script with functions to build more complex programs.</Info>
 
-A **function** is like a little program on its own. Like full programs, a function takes some input and produces some output. In that sense, functions are very simple. We could slap a function declaration (the line of code that tells the computer that the code that follows is a function) on top of any code we’ve written so far and call it a function. In fact, some languages (like Java) can’t do anything outside a function.
+A **function** is like a little program on its own. Like full programs, a function takes some input and produces some output. In that sense, functions are very simple. We could slap a function declaration (the line of code that tells the computer that the code that follows is a function) on top of any code we’ve written so far and call it a function. In fact, some languages (like Java) can’t do anything outside a function. 
 
 ### Power of Functions
 
@@ -65,7 +65,7 @@ Finally, our notion of scope still applies to functions. In order to call a func
 </div>
 <div className="content-chunk" data-subsection-id = "An-Analogy-for-Functions-390t">
 ## An Analogy for Functions
-Functions are powerful, but complicated. They fundamentally change the way we think about programming. We’re no longer writing just linear sequences of instructions, with small branches or repetitions. Instead, we’re now structuring entire programs. When writing a function, we need to think about how it might be used by the rest of the program, not just what the needs are for our current line of code. The power of functions means that they’re critical to understand, but they’re also a fundamental change in how we think about structuring programs. As a result, they can be very confusing. So, I think it’s useful to think of functions with an analogy to an office. 
+Functions are powerful, but complicated. They fundamentally change the way we think about programming. We’re no longer writing just linear sequences of instructions, with small branches or repetitions. Instead, we’re now structuring entire programs. When writing a function, we need to think about how it might be used by the rest of the program, not just what the needs are for our current line of code. The power of functions means that they’re critical to understand, but they’re also a fundamental change in how we think about structuring programs. As a result, they can be very confusing. So, I think it’s useful to think of functions with an analogy to an office.
 
 ### Setting Up the Analogy
 
@@ -112,7 +112,7 @@ We’ve spent a very long time now just talking about functions in abstract term
 </div>
 <div className="content-chunk" data-subsection-id = "Simple-Functions-in-Python-391t">
 ## Simple Functions in Python
-Functions are a bit of a chicken-and-egg problem when learning to program. You must have defined a function to be able to call it, but you must be able to call a function to test defining it. So, where do we start? Fortunately, we’ve seen some examples of function calls already: len(), str(), and random.randint() for example. So, we’ve seen what’s involved in a function call. Let’s get started defining functions. First, we’ll define a very general function with no input or return, a function that just performs a task. Then, next lesson we’ll define a function that does return some value. Finally, we’ll define a function that has some parameters and returns some value. 
+Functions are a bit of a chicken-and-egg problem when learning to program. You must have defined a function to be able to call it, but you must be able to call a function to test defining it. So, where do we start? Fortunately, we’ve seen some examples of function calls already: len(), str(), and random.randint() for example. So, we’ve seen what’s involved in a function call. Let’s get started defining functions. First, we’ll define a very general function with no input or return, a function that just performs a task. Then, next lesson we’ll define a function that does return some value. Finally, we’ll define a function that has some parameters and returns some value.
 
 ### The Function Definition
 
@@ -138,7 +138,7 @@ Notice that we’ve touched on the idea of scope for methods in this. The scope 
 </div>
 <div className="content-chunk" data-subsection-id = "Functions-with-Returns-and-Parameters-in-Python-392t">
 ## Functions with Returns and Parameters in Python
-So, we’ve now seen the general syntax for defining a function: the keyword def, a name for the function, parentheses, a colon, then the function body. Now let’s add two layers of complexity to this: a return statement and some parameters. 
+So, we’ve now seen the general syntax for defining a function: the keyword def, a name for the function, parentheses, a colon, then the function body. Now let’s add two layers of complexity to this: a return statement and some parameters.
 
 ### A Function with a Return
 
@@ -187,7 +187,7 @@ Before we move on, it is also worth calling attention to the subtle but powerful
 </div>
 <div className="content-chunk" data-subsection-id = "Common-Function-Errors-in-Python-393t">
 ## Common Function Errors in Python
-We’ve covered how functions are defined and called; now let’s discuss some of the function-specific things that can go wrong. All of the errors we’ve described in the past can apply to functions, too. For example, if we have a parameter to a function (like amount in currencyAmount()) that is treated as an integer inside the function but we pass in a string, then we get the same error as if we had just tried to do math on a string in a regular program as well. The function doesn’t change that. However, there are a couple of function-specific errors we can anticipate. 
+We’ve covered how functions are defined and called; now let’s discuss some of the function-specific things that can go wrong. All of the errors we’ve described in the past can apply to functions, too. For example, if we have a parameter to a function (like amount in currencyAmount()) that is treated as an integer inside the function but we pass in a string, then we get the same error as if we had just tried to do math on a string in a regular program as well. The function doesn’t change that. However, there are a couple of function-specific errors we can anticipate.
 
 ### Parameter Mismatch
 
@@ -209,7 +209,7 @@ This is the first major exception we’ve encountered to our general rule that t
 </div>
 <div className="content-chunk" data-subsection-id = "Advanced-Python-Functions-394t">
 ## Advanced Python Functions
-Different languages extend the general idea of functions in different ways. In Python, there are a couple of advanced details regarding functions that are worth covering. In fact, Python functions can get very complex, but we’re most interested in keyword parameters. Keyword parameters are not terribly common in what you’ll write, but they do add a lot of power to your toolbox. 
+Different languages extend the general idea of functions in different ways. In Python, there are a couple of advanced details regarding functions that are worth covering. In fact, Python functions can get very complex, but we’re most interested in keyword parameters. Keyword parameters are not terribly common in what you’ll write, but they do add a lot of power to your toolbox.
 
 ### Using Keyword Parameters
 
@@ -249,7 +249,7 @@ Now, we call currencyAmount in two different ways. On line 13, we just give it t
 </div>
 <div className="content-chunk" data-subsection-id = "Functions-and-Turtles-395t">
 ## Functions and Turtles
-Functions give us a powerful new way to add new functionality to our turtle project while keeping it somewhat organized. To close out our lesson on functions, let’s do two things: first, let’s take our prior work on a shape command and spin it off into a function, and second, let’s create a new function for something even more interesting. 
+Functions give us a powerful new way to add new functionality to our turtle project while keeping it somewhat organized. To close out our lesson on functions, let’s do two things: first, let’s take our prior work on a shape command and spin it off into a function, and second, let’s create a new function for something even more interesting.
 
 ### The Shape Function
 

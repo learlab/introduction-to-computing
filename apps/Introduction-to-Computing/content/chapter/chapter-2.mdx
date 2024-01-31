@@ -10,7 +10,7 @@ quiz: false
 \- Implement different types of conditional statements with operators and analyze the effect of conditionals on the scope of a variable;  
 \- Write a script using conditional statements to control the turtle with user input.</Info>
 
-The term **“conditional”** comes from the idea that sometimes we want to run some code conditionally; in other words, we only want to run it if something is true. For example, if the user has modified a document since the last saved, then we want to ask them if they want to save before closing the program. If a user has entered a different password than the one saved, then we want to ask if they want to update the saved password. If a user’s bank balance is insufficient to cover a purchase or the retailer is not trusted, then we want to reject the purchase.   
+The term **“conditional”** comes from the idea that sometimes we want to run some code conditionally; in other words, we only want to run it if something is true. For example, if the user has modified a document since the last saved, then we want to ask them if they want to save before closing the program. If a user has entered a different password than the one saved, then we want to ask if they want to update the saved password. If a user’s bank balance is insufficient to cover a purchase or the retailer is not trusted, then we want to reject the purchase.  
 Modern programming couldn’t exist without conditionals like these. They’re a relatively simple principle (but don’t worry if you don’t get them at first), but they’re extremely powerful.
 
 <Definition text="Conditional Statements">Programming statements that control what code is executed based on certain conditions; usually of the form “if”, “else if”, and “else”.</Definition>
@@ -101,7 +101,7 @@ Now let’s throw our else-if statements into the mix. We’ll start with just t
 
 <Notebook code = {`#Figure 3.2.6\n#Creates todaysWeather and sets it equal to "cold"\ntodaysWeather = "cold"\n\n#Checks if todaysWeather equals "raining"\nif todaysWeather == "raining":\n\tprint("raincoat")\n\tprint("rainboots")\n#Otherwise, checks if todaysWeather equals "cold" \nelif todaysWeather == "cold":\n\tprint("long-sleeved shirt")\n\tprint("scarf")\n#If todaysWeather didn't equal "raining", \n#do the following \nelse:\n\tprint("t-shirt")\n\tprint("shorts")\nprint("Done!")`}/>
 
-The majority of the code in Figure 3.2.6 is the same as the code from Figure 3.2.4, but we’ve put something in between the if and the else. Line 9 is nearly identical to the original if in line 5, but it starts with a slightly different keyword: elif. This is Python’s keyword for else-if. Other than the “el” at the beginning, it perfectly matches the original if. The only necessity for an elif statement is that it must come after an if and before any else at that level of indentation. And, as we said before, we can have more than one, as shown in Figure 3.2.7.
+The majority of the code in Figure 3.2.6 is the same as the code from Figure 3.2.4, but we’ve put something in between the if and the else. Line 9 is nearly identical to the original if in line 5, but it starts with a slightly different keyword: elif. This is Python’s keyword for else-if. Other than the “el” at the beginning, it perfectly matches the original if. The only necessity for an elif statement is that it must come after an if and before any else at that level of indentation. And, as we said before, we can have more than one, as shown in Figure 3.2.7. 
 
 <Notebook code = {`#Figure 3.2.7\n#Creates todaysWeather and sets it equal to "windy\ntodaysWeather = "windy"\n\n#Checks if todaysWeather equals "raining"\nif todaysWeather == "raining":\n\tprint("raincoat")\n\tprint("rainboots")\n#Checks if todaysWeather equals "cold" \nelif todaysWeather == "cold":\n\tprint("long-sleeved shirt")\n\tprint("scarf")\n#Checks if todaysWeather equals "windy" \nelif todaysWeather == "windy":\n\tprint("jacket")\n#Checks if todaysWeather equals "snowy" \nelif todaysWeather == "snowy":\n\tprint("snowboots")\n#If todaysWeather didn't equal any of these, then.\nelse:\n\tprint("t-shirt")\n\tprint("shorts")\nprint("Done!")`}/>
 
@@ -124,7 +124,7 @@ The code in Figure 3.2.9 code gives us a SyntaxError. Why? Between the elif on l
 <div className="content-chunk" data-subsection-id = "Conditionals-and-Operators-377t">
 ## Conditionals and Operators
 We’ve already seen that conditional statements usually use logical expressions built around logical operators to decide what to do. This isn’t always the case; sometimes we might store the result of a logical expression in a boolean, and simply use that boolean inside the conditional instead of the expression itself. Either way, though, conditionals are often used with logical expressions in some way.  
-So far, we’ve only looked at the equality operator. However, conditionals are used in other ways as well.
+So far, we’ve only looked at the equality operator. However, conditionals are used in other ways as well. 
 
 ### Relational and Mathematical Operators
 
@@ -143,7 +143,7 @@ Returning to our weather and clothing example, we would likely have certain arti
 </div>
 <div className="content-chunk" data-subsection-id = "Conditionals-and-Operators-378t">
 ## Conditionals and Operators
-Let’s take a look at some of the ways we can use conditionals along with operators in Python. We’ll keep these examples simple: mostly if-then-else statements and few elif statements, but note that these can be combined with the advanced structures covered above.
+Let’s take a look at some of the ways we can use conditionals along with operators in Python. We’ll keep these examples simple: mostly if-then-else statements and few elif statements, but note that these can be combined with the advanced structures covered above. 
 
 ### Relational Operators
 
@@ -205,7 +205,7 @@ As we said before, we could take these principles and combine them with the comp
 </div>
 <div className="content-chunk" data-subsection-id = "Nested-Conditionals-380t">
 ## Nested Conditionals
-In our example of evaluating whether a purchase would be approved, there was a weakness. We evaluated whether or not multiple conditions were all true, and if they all were, then we approved the purchase; if not, we rejected it. However, this doesn’t tell us why the purchase was rejected. We know that if it was approved, all the conditions were true, but if it was rejected, we don’t know which part caused the rejection. We can resolve this by using a more complex structure: a nested conditional.
+In our example of evaluating whether a purchase would be approved, there was a weakness. We evaluated whether or not multiple conditions were all true, and if they all were, then we approved the purchase; if not, we rejected it. However, this doesn’t tell us why the purchase was rejected. We know that if it was approved, all the conditions were true, but if it was rejected, we don’t know which part caused the rejection. We can resolve this by using a more complex structure: a nested conditional. 
 
 ### Nested Conditionals
 
@@ -229,7 +229,7 @@ Figure 3.2.19 is our new approach. Each individual decision is separate. If one 
 </div>
 <div className="content-chunk" data-subsection-id = "Nested-Conditionals-in-Python-381t">
 ## Nested Conditionals in Python
-Let’s take a look at what our previous purchase validation code would look like with nested conditionals.
+Let’s take a look at what our previous purchase validation code would look like with nested conditionals. 
 
 ### Ifs Within Ifs
 
@@ -249,7 +249,7 @@ This code performs exactly the same, but all the nesting is inside the else port
 </div>
 <div className="content-chunk" data-subsection-id = "Conditionals-and-Scope-382t">
 ## Conditionals and Scope
-We used conditionals as our example for scope in the previous chapter, so you’ve already seen a bit about how these interact. Now that you know what conditionals are, however, let’s revisit this. In Python, the scope of a variable starts when it is created, and ends when one of a number of terminations happen. For now, the only termination you need to know is the program ending: when the program ends and closes, the computer forgets the variables that were created while it was running. There are other times when the scope of a variable ends or is suspended, but for now, you only need to worry about the scope ending when the code ends.
+We used conditionals as our example for scope in the previous chapter, so you’ve already seen a bit about how these interact. Now that you know what conditionals are, however, let’s revisit this. In Python, the scope of a variable starts when it is created, and ends when one of a number of terminations happen. For now, the only termination you need to know is the program ending: when the program ends and closes, the computer forgets the variables that were created while it was running. There are other times when the scope of a variable ends or is suspended, but for now, you only need to worry about the scope ending when the code ends. 
 
 ### Accessing Variables within Conditionals
 
@@ -272,7 +272,7 @@ If we really want to create a variable inside a conditional to use outside of it
 </div>
 <div className="content-chunk" data-subsection-id = "Conditionals-and-Turtles-383t">
 ## Conditionals and Turtles
-Now that we have conditionals at our disposal, we can really start to create a way for the user to control turtles with their input alone. Let’s create an interface with two possible commands the user can give: turn and forward. Let’s also assume the user is going to enter two such commands, so we’ll run the same code twice.
+Now that we have conditionals at our disposal, we can really start to create a way for the user to control turtles with their input alone. Let’s create an interface with two possible commands the user can give: turn and forward. Let’s also assume the user is going to enter two such commands, so we’ll run the same code twice. 
 
 ### Turn and Forward
 

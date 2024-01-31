@@ -11,7 +11,7 @@ quiz: false
 \- Implement error handling structures in their programs to catch and respond to invalid user input.</Info>
 
 Early in our conversations, we covered the idea of errors. Errors were specific times when our code tried to do something it wasn’t able to do. For example, we can’t divide by zero: telling our code to divide by zero would cause an error. Similarly, we can’t open a file that doesn’t exist: telling our code to open a file that doesn’t exist would cause an error. In some languages, these are also referred to as exceptions; and in some languages, there are subtle differences between errors and exceptions. Generally, we’ll use the words interchangeably until we get to your language-specific material.  
-So far, we’ve most often used errors for debugging: when an error arises, we know we need to go and figure out what caused it and prevent it from happening in the future. However, that’s not the only purpose of errors. Sometimes, instead of preventing errors, we want to use the fact that an error arises to direct or control our program. In other words: some errors might be expected and even purposeful, and when they arise our program should know how to deal with them. 
+So far, we’ve most often used errors for debugging: when an error arises, we know we need to go and figure out what caused it and prevent it from happening in the future. However, that’s not the only purpose of errors. Sometimes, instead of preventing errors, we want to use the fact that an error arises to direct or control our program. In other words: some errors might be expected and even purposeful, and when they arise our program should know how to deal with them.
 
 ### "Catching" Errors
 
@@ -31,7 +31,7 @@ Third and perhaps most importantly, if you’re writing programs for people to a
 </div>
 <div className="content-chunk" data-subsection-id = "Try-Catch-Finally-397t">
 ## Try-Catch-Finally
-We’re covering error handling in the control structures unit of this course because the actual structure of error-handling is, itself, a control structure. There are three common structures for error-handling: the try, catch, and finally.
+We’re covering error handling in the control structures unit of this course because the actual structure of error-handling is, itself, a control structure. There are three common structures for error-handling: the try, catch, and finally. 
 
 ### The Try Block
 
@@ -53,7 +53,7 @@ The finally block is typically used for code that absolutely needs to run, even 
 </div>
 <div className="content-chunk" data-subsection-id = "Try-and-Except-in-Python-396t">
 ## Try and Except in Python
-So far, we’ve been avoiding errors in our code. Now, we get to add them intentionally, so that we can learn how to catch them. We’ll start just by using try blocks to prevent code from crashing if errors are encountered; then, we’ll catch these errors and react accordingly.
+So far, we’ve been avoiding errors in our code. Now, we get to add them intentionally, so that we can learn how to catch them. We’ll start just by using try blocks to prevent code from crashing if errors are encountered; then, we’ll catch these errors and react accordingly. 
 
 ### The Try Statement
 
@@ -120,7 +120,7 @@ In Figure 3.5.12, we moved the divide-by-zero error back up to line 5. As a resu
 </div>
 <div className="content-chunk" data-subsection-id = "Else-and-Finally-in-Python-398t">
 ## Else and Finally in Python
-At this point, we’ve tried some code and caught any errors that arose while that code was running. In some languages, that’s all there is. In many languages, there’s an additional block called finally, which runs some code whether an error occurred or not. Python also adds an additional option: remember else from conditionals? We can use else here as well!
+At this point, we’ve tried some code and caught any errors that arose while that code was running. In some languages, that’s all there is. In many languages, there’s an additional block called finally, which runs some code whether an error occurred or not. Python also adds an additional option: remember else from conditionals? We can use else here as well! 
 
 ### Else for Error Handling
 
@@ -196,7 +196,7 @@ Finally, Figure 3.5.22 shows the code running with an input file that doesn’t 
 <div className="content-chunk" data-subsection-id = "Error-Handling-and-Other-Control-Structures-399t">
 ## Error Handling and Other Control Structures
 Recall that early in our material, we covered some common types of errors such as TypeError and NameError. Since then, we’ve encountered some others, like IOError and ValueError. Remember, when we first went over these, we stated that you wouldn’t necessarily understand them all right away: rather, they were provided early so you could keep going back to them. I’d advise going back to them now as well with your new knowledge of programming and errors in general. You may also read a complete listing of Python’s error types here: https://docs.python.org/3/library/exceptions.html.  
-As we close our conversation on control structures, let us look at how error handling integrates with the other control structures that we have seen. 
+As we close our conversation on control structures, let us look at how error handling integrates with the other control structures that we have seen.
 
 ### Error Handling and For Loops
 
@@ -224,7 +224,7 @@ What happens if we put the error handling directly in the code that calls the fu
 </div>
 <div className="content-chunk" data-subsection-id = "Error-Handling-and-Turtles-400t">
 ## Error Handling and Turtles
-We’ve been developing code that allows a user using the command line to control the turtle in the turtle window. However, we’ve noted a couple times that there was a weakness. While our code could intelligently react if the user entered an invalid command, it could not intelligently react if the user entered an invalid argument. When prompted for distance, angle, or number of sides, if the user entered a nonnumerical input, the program crashed.  
+We’ve been developing code that allows a user using the command line to control the turtle in the turtle window. However, we’ve noted a couple times that there was a weakness. While our code could intelligently react if the user entered an invalid command, it could not intelligently react if the user entered an invalid argument. When prompted for distance, angle, or number of sides, if the user entered a nonnumerical input, the program crashed.   
 We now have the means to fix that. We’ll keep things relatively simple and say that if a user enters an invalid argument, they are kicked back out to the first menu.
 
 ### Error Handling and Turtles
