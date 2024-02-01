@@ -3,7 +3,7 @@ import { z } from "zod";
 const PromptDetailsSchema = z.object({
 	type: z.enum(["Topic Similarity", "Language Borrowing", "Language Borrowing (from iTELL AI)", "Content", "Wording", "English"]),
 	feedback: z.object({
-		is_passed: z.boolean(),
+		is_passed: z.boolean().nullable(),
 		prompt: z.string().nullable()
 	})
 

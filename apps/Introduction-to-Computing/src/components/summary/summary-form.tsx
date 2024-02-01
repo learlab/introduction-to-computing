@@ -1,6 +1,5 @@
 "use client";
 
-import { env } from "@/env.mjs";
 import { PAGE_SUMMARY_THRESHOLD } from "@/lib/constants";
 import { isLastPage } from "@/lib/location";
 import { allPagesSorted } from "@/lib/pages";
@@ -152,6 +151,7 @@ export const SummaryForm = ({
 								},
 							});
 						} else {
+							console.log("Failed to parse SummaryResults", parsed.error);
 							setButtonText("Submit");
 							setPending(false);
 							setFormState((state) => ({
