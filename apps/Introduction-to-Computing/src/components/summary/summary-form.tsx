@@ -1,5 +1,6 @@
 "use client";
 
+import { env } from "@/env.mjs";
 import { PAGE_SUMMARY_THRESHOLD } from "@/lib/constants";
 import { isLastPage } from "@/lib/location";
 import { allPagesSorted } from "@/lib/pages";
@@ -12,13 +13,11 @@ import {
 	maybeCreateQuizCookie,
 } from "@/lib/server-actions";
 import { getFeedback } from "@/lib/summary";
-import { getChunkElement, makeInputKey, makePageHref } from "@/lib/utils";
+import { isAdmin, makeInputKey, makePageHref } from "@/lib/utils";
 import {
 	ErrorFeedback,
 	ErrorType,
 	SummaryFeedback as SummaryFeedbackType,
-	SummaryFormState,
-	SummaryResponse,
 	SummaryResponseSchema,
 	simpleFeedback,
 	validateSummary,
@@ -65,7 +64,7 @@ export const SummaryForm = ({
 	textareaClassName,
 }: Props) => {
 	const page = allPagesSorted.find((p) => p.page_slug === pageSlug) as Page;
-
+	const admin = isAdmin(user.email);
 	const [pending, setPending] = useState(false);
 	const [buttonText, setButtonText] = useState("Submit");
 	const [chunkQuestion, setChunkQuestion] = useState<ChunkQuestion | null>(
@@ -268,6 +267,7 @@ export const SummaryForm = ({
 					disabled={editDisabled}
 					pageSlug={pageSlug}
 					textAreaClassName={textareaClassName}
+					admin={admin}
 				/>
 				{formState.error && <Warning>{ErrorFeedback[formState.error]}</Warning>}
 				<div className="flex justify-end">

@@ -28,6 +28,16 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	callbacks: {
+		async signIn({ user }) {
+			if (
+				(env.STUDENT_EMAILS as string[]).includes(user.email || "") ||
+				(env.NEXT_PUBLIC_ADMIN_EMAILS as string[]).includes(user.email || "")
+			) {
+				return true;
+			}
+
+			return "/auth?error=NotStudentEmail";
+		},
 		session({ session, user }) {
 			if (session.user) {
 				session.user.id = user.id;

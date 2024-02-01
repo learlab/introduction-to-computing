@@ -1,6 +1,5 @@
 import { Progress } from "@/components/client-components";
-import { allPagesSorted } from "@/lib/pages";
-import { PageData, getPageData } from "@/lib/utils";
+import { allPagesSorted, getPageData } from "@/lib/pages";
 import { User } from "@prisma/client";
 
 export const UserProgress = ({ user }: { user: User }) => {

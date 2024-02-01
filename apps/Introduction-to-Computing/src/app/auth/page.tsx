@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { ChevronLeftIcon, CommandIcon } from "lucide-react";
+import { AuthForm } from "@/components/auth/auth-form";
 import { Button } from "@/components/client-components";
 import FlipCard from "@/components/flip-card";
-import { AuthForm } from "@/components/auth/auth-form";
-import { Warning } from "@itell/ui/server";
 import { getSiteConfig } from "@/lib/config";
 import { isProduction } from "@/lib/constants";
+import { Warning } from "@itell/ui/server";
+import { ChevronLeftIcon, CommandIcon } from "lucide-react";
+import Link from "next/link";
 
 type PageProps = {
 	searchParams?: {
@@ -14,6 +14,8 @@ type PageProps = {
 };
 
 const ErrorDict: Record<string, string> = {
+	NotStudentEmail:
+		"You need to use your student email (xxx@gatech.edu) to sign in, and make sure you are enrolled in the CS1301 course.",
 	OAuthAccountNotLinked:
 		"You already have an account. Please sign in using your original platform",
 	Callback: `An internal error occurred. Please try again later or contact lear.lab.vu@gmail.com${

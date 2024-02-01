@@ -1,7 +1,6 @@
 import { Progress } from "@/components/client-components";
 import { StudentStats, getClassStudentStats } from "@/lib/dashboard";
-import { allPagesSorted } from "@/lib/pages";
-import { delay, getPageData } from "@/lib/utils";
+import { allPagesSorted, getPageData } from "@/lib/pages";
 import { Skeleton } from "@itell/ui/server";
 import { StudentData, columns } from "./students-columns";
 import { StudentsTable } from "./students-table";

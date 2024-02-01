@@ -13,6 +13,7 @@ type Props = {
 	value?: string;
 	disabled?: boolean;
 	textAreaClassName?: string;
+	admin?: boolean;
 };
 
 export const SummaryInput = ({
@@ -20,6 +21,7 @@ export const SummaryInput = ({
 	disabled,
 	textAreaClassName,
 	value = "",
+	admin = false,
 }: Props) => {
 	const searchParams = useSearchParams();
 	const summaryToRevise = searchParams?.get("summary");
@@ -50,7 +52,7 @@ export const SummaryInput = ({
 					textAreaClassName,
 				)}
 				onPaste={(e) => {
-					if (isProduction) {
+					if (isProduction && !admin) {
 						e.preventDefault();
 						toast.warning("Copy & Paste is not allowed");
 					}

@@ -1,6 +1,5 @@
 import type { PageLinkData } from "@itell/ui/client";
-import { allPagesSorted } from "./pages";
-import { PageData, getPageData } from "./utils";
+import { allPagesSorted, getPageData } from "./pages";
 
 export const getPagerLinks = ({
 	pageIndex,

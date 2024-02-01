@@ -1,7 +1,8 @@
+import { env } from "@/env.mjs";
 import { Location } from "@/types/location";
 import { SidebarSection } from "@/types/section";
-import { allPagesSorted } from "./pages";
 import { redirect } from "next/navigation";
+import { allPagesSorted } from "./pages";
 
 export const getYoutubeLinkFromEmbed = (url: string) => {
 	const regex = /embed\/([\w-]+)\?/;
@@ -68,28 +69,6 @@ export type PageData = {
 	nextPageSlug: string | null;
 };
 
-export const getPageData = (slug: string | null): PageData | null => {
-	const index = allPagesSorted.findIndex((s) => s.page_slug === slug);
-	if (index === -1) {
-		return null;
-	}
-	const page = allPagesSorted[index];
-
-	const nextPageSlug =
-		index !== allPagesSorted.length - 1
-			? allPagesSorted[index + 1]?.page_slug
-			: null;
-
-	return {
-		id: page._id,
-		index,
-		title: page.title,
-		page_slug: page.page_slug,
-		chapter: page.chapter,
-		nextPageSlug,
-	};
-};
-
 export const getChunkElement = (chunkId: string) => {
 	return document.querySelector(
 		`div[data-subsection-id='${chunkId}']`,
@@ -102,4 +81,9 @@ export const redirectWithSearchParams = (
 ) => {
 	const query = new URLSearchParams(searchParams).toString();
 	return redirect(`${path}?${query}`);
+};
+
+export const isAdmin = (email: string | null | undefined) => {
+	if (!email) return false;
+	return (env.NEXT_PUBLIC_ADMIN_EMAILS as string[]).includes(email);
 };

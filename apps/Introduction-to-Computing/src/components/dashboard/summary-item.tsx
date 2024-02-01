@@ -1,18 +1,18 @@
-import Link from "next/link";
 import { Summary } from "@prisma/client";
+import Link from "next/link";
 
+import { getPageData } from "@/lib/pages";
 import { cn, relativeDate } from "@itell/core/utils";
 import { Skeleton, buttonVariants } from "@itell/ui/server";
 import { CheckCircle, XCircle } from "lucide-react";
-import { getPageData } from "@/lib/utils";
 
 interface PostItemProps {
-	summary: Summary
+	summary: Summary;
 	timeZone: string;
 }
 
 export function SummaryItem({ summary, timeZone }: PostItemProps) {
-	const page = getPageData(summary.pageSlug)
+	const page = getPageData(summary.pageSlug);
 	if (!page) return null;
 	return (
 		<Link
@@ -23,9 +23,7 @@ export function SummaryItem({ summary, timeZone }: PostItemProps) {
 			)}
 		>
 			<header className="flex justify-between text-sm text-muted-foreground">
-				<p className="font-semibold text-lg leading-relaxed">
-					{page.title}
-				</p>
+				<p className="font-semibold text-lg leading-relaxed">{page.title}</p>
 				<p>{relativeDate(summary.created_at, timeZone)}</p>
 			</header>
 			<div className="flex items-center justify-between">

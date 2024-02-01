@@ -1,7 +1,13 @@
 "use client";
 
-import { cn } from "@itell/core/utils";
 import { Confetti } from "@/components/ui/confetti";
+import { isProduction } from "@/lib/constants";
+import { getQAScore } from "@/lib/question";
+import { createConstructedResponse } from "@/lib/server-actions";
+import { isAdmin } from "@/lib/utils";
+// import shake effect
+import "@/styles/shakescreen.css";
+import { cn } from "@itell/core/utils";
 import {
 	Card,
 	CardContent,
@@ -10,10 +16,10 @@ import {
 	Warning,
 } from "@itell/ui/server";
 import { AlertTriangle } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Spinner } from "../spinner";
-import { getQAScore } from "@/lib/question";
-import { FeedbackModal } from "./feedback-modal";
+import { useFormState, useFormStatus } from "react-dom";
+import { toast } from "sonner";
 import {
 	Button,
 	HoverCard,
@@ -21,15 +27,10 @@ import {
 	HoverCardTrigger,
 	TextArea,
 } from "../client-components";
-import { toast } from "sonner";
-// import shake effect
-import "@/styles/shakescreen.css";
-import { useSession } from "next-auth/react";
-import { createConstructedResponse } from "@/lib/server-actions";
-import { NextChunkButton } from "./next-chunk-button";
-import { isProduction } from "@/lib/constants";
-import { useFormState, useFormStatus } from "react-dom";
 import { useQA } from "../context/qa-context";
+import { Spinner } from "../spinner";
+import { FeedbackModal } from "./feedback-modal";
+import { NextChunkButton } from "./next-chunk-button";
 
 type QuestionScore = 0 | 1 | 2;
 
@@ -206,6 +207,7 @@ export const QuestionBox = ({
 			  answerStatus === AnswerStatus.SEMI_CORRECT
 		  ? "Continue reading"
 		  : "Skip this question";
+	const admin = isAdmin(session?.user?.email);
 
 	if (!session?.user) {
 		return (
@@ -248,7 +250,7 @@ export const QuestionBox = ({
 							rows={2}
 							className="max-w-lg mx-auto rounded-md shadow-md p-4"
 							onPaste={(e) => {
-								if (isProduction) {
+								if (isProduction && !admin) {
 									e.preventDefault();
 									toast.warning("Copy & Paste is not allowed for question");
 								}
@@ -354,7 +356,7 @@ export const QuestionBox = ({
 							rows={2}
 							className="max-w-lg mx-auto rounded-md shadow-md p-4"
 							onPaste={(e) => {
-								if (isProduction) {
+								if (isProduction && !admin) {
 									e.preventDefault();
 									toast.warning("Copy & Paste is not allowed for question");
 								}

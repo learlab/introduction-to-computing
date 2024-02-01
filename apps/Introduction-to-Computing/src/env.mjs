@@ -6,13 +6,15 @@ import { z } from "zod";
  */
 const server = z.object({
 	NODE_ENV: z.enum(["development", "test", "production"]),
-	GOOGLE_CLIENT_ID: z.string(),
-	GOOGLE_CLIENT_SECRET: z.string(),
 	AZURE_CLIENT_ID: z.string(),
 	AZURE_CLIENT_SECRET: z.string(),
 	NEXTAUTH_URL: z.string(),
 	NEXTAUTH_SECRET: z.string(),
 	DATABASE_URL: z.string(),
+	STUDENT_EMAILS: z
+		.string()
+		.optional()
+		.transform((val) => (val ? JSON.parse(val) : [])),
 });
 
 /**
@@ -21,6 +23,10 @@ const server = z.object({
  */
 const client = z.object({
 	NEXT_PUBLIC_SCORE_API_URL: z.string(),
+	NEXT_PUBLIC_ADMIN_EMAILS: z
+		.string()
+		.optional()
+		.transform((val) => (val ? JSON.parse(val) : [])),
 });
 
 /**
@@ -31,15 +37,15 @@ const client = z.object({
  */
 const processEnv = {
 	NODE_ENV: process.env.NODE_ENV,
-	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 	AZURE_CLIENT_ID: process.env.AZURE_CLIENT_ID,
 	AZURE_CLIENT_SECRET: process.env.AZURE_CLIENT_SECRET,
 	NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 	NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 	SCORE_API_URL: process.env.SCORE_API_URL,
 	DATABASE_URL: process.env.DATABASE_URL,
+	STUDENT_EMAILS: process.env.STUDENT_EMAILS,
 	NEXT_PUBLIC_SCORE_API_URL: process.env.NEXT_PUBLIC_SCORE_API_URL,
+	NEXT_PUBLIC_ADMIN_EMAILS: process.env.NEXT_PUBLIC_ADMIN_EMAILS,
 };
 
 // Don't touch the part below
